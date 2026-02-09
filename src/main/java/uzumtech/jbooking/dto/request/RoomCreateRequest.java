@@ -17,7 +17,7 @@ public record RoomCreateRequest(
         String roomNumber,
 
         @Positive(message = "Price must be positive")
-        BigDecimal pricePerNight,
+        BigDecimal price,
 
         @Min(value = 1, message = "Capacity must be at least 1")
         Integer capacity,
