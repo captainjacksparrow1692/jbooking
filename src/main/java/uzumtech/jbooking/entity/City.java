@@ -21,4 +21,9 @@ public class City {
     String name;
 
     String country;
+
+    @Column(length = 1000)
+    String description;
+
+    String timezone;
 }
