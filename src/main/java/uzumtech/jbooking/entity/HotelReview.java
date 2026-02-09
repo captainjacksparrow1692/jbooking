@@ -17,7 +17,7 @@ import java.util.Map;
 @AllArgsConstructor
 @Table(name = "hotel_reviews")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class HotelRating {
+public class HotelReview {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

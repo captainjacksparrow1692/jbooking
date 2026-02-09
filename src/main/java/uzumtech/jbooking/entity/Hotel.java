@@ -41,4 +41,10 @@ public class Hotel {
 
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
     List<Room> rooms;
+
+    @Column(name = "average_rating")
+    Double averageRating = 0.0;
+
+    @Column(name = "reviews_count")
+    Integer reviewsCount = 0;
 }
