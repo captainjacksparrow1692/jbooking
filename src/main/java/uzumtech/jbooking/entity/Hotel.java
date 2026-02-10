@@ -31,7 +31,7 @@ public class Hotel {
     AccommodationType accommodationType;
 
     @Enumerated(EnumType.STRING)
-    HotelBrand brand;
+    HotelBrand hotelBrand;
 
     @ElementCollection(targetClass = Amenity.class)
     @CollectionTable(name = "hotel_amenities", joinColumns = @JoinColumn(name = "hotel_id"))

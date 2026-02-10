@@ -13,6 +13,6 @@ public interface RoomMapper {
     @Mapping(target = "roomAvailabilityStatus", ignore = true)
     Room toEntity(RoomCreateRequest request);
 
-    @Mapping(target = "roomAvailabilityStatus", source = "rooomAvailabilityStatus")
+    @Mapping(target = "roomAvailabilityStatus", source = "roomAvailabilityStatus")
     RoomResponse toResponse(Room room);
 }
