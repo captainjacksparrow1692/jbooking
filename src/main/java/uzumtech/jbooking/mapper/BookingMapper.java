@@ -9,8 +9,9 @@ import uzumtech.jbooking.entity.Booking;
 public interface BookingMapper {
 
     @Mapping(target = "bookingId", source = "id")
-    @Mapping(target = "room", ignore = true)
-    @Mapping(target = "bookingStatus", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "hotelName", source = "room.hotel.name")
+    @Mapping(target = "roomNumber", source = "room.roomNumber")
+    @Mapping(target = "totalPrice", source = "totalPrice") // Цена, рассчитанная в сервисе
+    @Mapping(target = "paymentType", source = "paymentType")
     BookingResponse toBookingResponse(Booking booking);
 }
