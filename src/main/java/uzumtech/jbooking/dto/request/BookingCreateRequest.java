@@ -1,9 +1,11 @@
 package uzumtech.jbooking.dto.request;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import uzumtech.jbooking.constant.enums.PaymentType;
+import uzumtech.jbooking.dto.GuestDto;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public record BookingCreateRequest (
 
@@ -16,7 +18,9 @@ public record BookingCreateRequest (
         LocalDate checkIn,
         LocalDate checkOut,
 
-        @Min(1)
-        Integer guestCount
+        PaymentType paymentType,
+
+        List<GuestDto> guests
+
 ){
 }
