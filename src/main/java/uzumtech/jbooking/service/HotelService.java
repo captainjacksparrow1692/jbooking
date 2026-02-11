@@ -17,4 +17,6 @@ public interface HotelService {
 
     //поиск по дате, гостям и условиям
     Page<HotelSearchResponse> searchHotel(HotelSearchRequest request, int page, int size);
+
+    void delete(Long id);
 }
