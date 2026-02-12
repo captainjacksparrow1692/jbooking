@@ -9,10 +9,12 @@ import uzumtech.jbooking.entity.Room;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface RoomMapper {
+
     @Mapping(target = "hotel", ignore = true)
-    @Mapping(target = "roomAvailabilityStatus", ignore = true)
+    @Mapping(target = "roomAvailabilityStatus", source = "availabilityStatus")
     Room toEntity(RoomCreateRequest request);
 
-    @Mapping(target = "roomAvailabilityStatus", source = "roomAvailabilityStatus")
+    @Mapping(target = "pricePerNight", source = "price")
+    @Mapping(target = "cancellationPolicyType", source = "cancellationPoliceType")
     RoomResponse toResponse(Room room);
 }

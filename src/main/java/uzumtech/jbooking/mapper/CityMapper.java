@@ -12,5 +12,6 @@ public interface CityMapper {
     @Mapping(target = "id", ignore = true)
     City toEntity(CityCreateRequest request);
 
+    @Mapping(target = "cityId", source = "id")
     CityResponse toResponse(City city);
 }

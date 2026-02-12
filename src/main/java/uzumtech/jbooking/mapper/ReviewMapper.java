@@ -12,8 +12,9 @@ import java.util.Map;
 @Mapper(componentModel = "spring")
 public interface ReviewMapper {
 
-    @Mapping(target = "averageScore", source = "score", qualifiedByName = "calculateAverage")
+    @Mapping(target = "averageScore", source = "scores", qualifiedByName = "calculateAverage")
     @Mapping(target = "userName", constant = "Guest")
+    @Mapping(target = "score", source = "scores")
     ReviewsResponse toResponse(HotelReview hotelReview);
 
     @Named("calculateAverage")

@@ -11,13 +11,12 @@ public interface BookingMapper {
 
     @Mapping(target = "bookingId", source = "id")
     @Mapping(target = "hotelName", source = "room.hotel.name")
-    @Mapping(target = "roomNumber", source = "room.roomNumber")
-    @Mapping(target = "totalPrice", source = "totalPrice") // Цена, рассчитанная в сервисе
-    @Mapping(target = "paymentType", source = "paymentType")
+    @Mapping(target = "totalPrice", ignore = true)
     BookingResponse toBookingResponse(Booking booking);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "status", ignore = true)
+    @Mapping(target = "bookingStatus", ignore = true)
     @Mapping(target = "room", ignore = true)
+    @Mapping(target = "createAt", ignore = true)
     Booking toEntity(BookingCreateRequest request);
 }
