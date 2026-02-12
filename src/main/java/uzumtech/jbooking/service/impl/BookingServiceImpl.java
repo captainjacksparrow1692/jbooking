@@ -1,5 +1,6 @@
 package uzumtech.jbooking.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -19,40 +20,68 @@ import uzumtech.jbooking.repository.BookingRepository;
 import uzumtech.jbooking.repository.RoomRepository;
 import uzumtech.jbooking.service.BookingService;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BookingServiceImpl implements BookingService {
-
     BookingRepository bookingRepository;
-    BookingMapper bookingMapper;
     RoomRepository roomRepository;
+    BookingMapper bookingMapper;
 
     @Override
     @Transactional
     public BookingResponse create(BookingCreateRequest request) {
-        Room room = roomRepository.findById(request.roomId())
-                .orElseThrow(() -> new RuntimeException("Room Not Found"));
-
         if (!bookingRepository.isRoomAvailable(request.roomId(), request.checkIn(), request.checkOut())) {
-            throw new IllegalStateException("Room is already  occupied");
+            throw new RuntimeException("Номер занят на эти даты");
         }
 
-        if(request.guests().size() > room.getCapacity()) {
-            throw new IllegalStateException("Guest count exceeds room capacity");
-        }
+        Room room = roomRepository.findById(request.roomId())
+                .orElseThrow(() -> new EntityNotFoundException("Комната не найдена"));
 
         Booking booking = bookingMapper.toEntity(request);
         booking.setRoom(room);
         booking.setBookingStatus(BookingStatus.HOLD);
+        booking.setCreatedAt(LocalDateTime.now());
+        booking.setHoldUntil(LocalDateTime.now().plusMinutes(15));
 
         return bookingMapper.toBookingResponse(bookingRepository.save(booking));
     }
 
     @Override
     public BookingResponse getById(Long id) {
+        return bookingRepository.findById(id)
+                .map(bookingMapper::toBookingResponse)
+                .orElseThrow(() -> new EntityNotFoundException("Бронь не найдена"));
+    }
 
+    @Override
+    @Transactional
+    public void updateStatus(BookingStatusUpdateRequest request) {
+        Booking booking = bookingRepository.findById(request.bookingId())
+                .orElseThrow(() -> new EntityNotFoundException("Бронь не найдена"));
+        booking.setBookingStatus(request.bookingStatus());
+        bookingRepository.save(booking);
+    }
 
+    @Override
+    @Transactional
+    public void cancel(Long id) {
+        Booking booking = bookingRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Бронь не найдена"));
+        booking.setBookingStatus(BookingStatus.CANCELLED);
+        bookingRepository.save(booking);
+    }
+
+    @Override
+    public Page<BookingResponse> getAll(Pageable pageable) {
+        return bookingRepository.findAll(pageable).map(bookingMapper::toBookingResponse);
+    }
+
+    @Override
+    public Page<BookingResponse> getByUserId(Long userId, Pageable pageable) {
+        return bookingRepository.findByUserId(userId, pageable).map(bookingMapper::toBookingResponse);
     }
 }
