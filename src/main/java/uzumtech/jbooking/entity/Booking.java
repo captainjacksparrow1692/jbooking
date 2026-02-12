@@ -30,6 +30,7 @@ public class Booking {
 
     LocalDate checkInDate;
     LocalDate checkOutDate;
+    LocalDateTime holdUntil;
 
     @Enumerated(EnumType.STRING)
     BookingStatus bookingStatus;

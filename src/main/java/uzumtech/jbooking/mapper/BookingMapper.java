@@ -2,6 +2,7 @@ package uzumtech.jbooking.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import uzumtech.jbooking.dto.request.BookingCreateRequest;
 import uzumtech.jbooking.dto.response.BookingResponse;
 import uzumtech.jbooking.entity.Booking;
 
@@ -14,4 +15,9 @@ public interface BookingMapper {
     @Mapping(target = "totalPrice", source = "totalPrice") // Цена, рассчитанная в сервисе
     @Mapping(target = "paymentType", source = "paymentType")
     BookingResponse toBookingResponse(Booking booking);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "status", ignore = true)
+    @Mapping(target = "room", ignore = true)
+    Booking toEntity(BookingCreateRequest request);
 }
