@@ -15,6 +15,5 @@ public interface RoomMapper {
     Room toEntity(RoomCreateRequest request);
 
     @Mapping(target = "pricePerNight", source = "price")
-    @Mapping(target = "cancellationPolicyType", source = "cancellationPoliceType")
     RoomResponse toResponse(Room room);
 }
