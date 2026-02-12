@@ -11,18 +11,14 @@ public interface BookingService {
     // Создание бронирования (с проверкой дат и вместимости)
     BookingResponse create(BookingCreateRequest request);
 
-    // Получение деталей конкретной брони
     BookingResponse getById(Long id);
 
-    // отмена
-    void cancel(Long id);
-
-    // получение всех бронирований
-    Page<BookingResponse> getAll(Pageable pageable);
-
-    // Обновление статуса (CONFIRMED, CANCELLED и т.д.)
+    // Обновление статуса
     void updateStatus(BookingStatusUpdateRequest request);
 
-    // Пагинация для списка бронирований пользователя или отеля
-    Page<BookingResponse> getPagedBookings(int page, int size);
+    void cancel(Long id);
+
+    Page<BookingResponse> getAll(Pageable pageable);
+
+    Page<BookingResponse> getByUserId(Long userId, Pageable pageable);
 }

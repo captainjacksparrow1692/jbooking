@@ -6,12 +6,7 @@ import uzumtech.jbooking.dto.request.CityCreateRequest;
 import uzumtech.jbooking.dto.response.CityResponse;
 
 public interface CityService {
-
     CityResponse create(CityCreateRequest request);
-
     CityResponse getById(Long id);
-
     Page<CityResponse> getAll(Pageable pageable);
-
-    void delete(Long id);
 }
