@@ -22,10 +22,6 @@ public record HotelCreateRequest(
         @NotNull(message = "Hotel brand is required")
         HotelBrand hotelBrand, // CHAIN, INDEPENDENT
 
-        @Min(value = 1, message = "Rating must be at least 1")
-        @Max(value = 5, message = "Rating cannot exceed 5")
-        Integer stars, // Официальное количество звезд
-
         @Size(max = 2000)
         String description,
 

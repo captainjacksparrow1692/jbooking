@@ -28,6 +28,9 @@ public class Payment {
 
     BigDecimal amount;
 
+    @Column(name = "transaction_id", unique = true)
+    String transactionId;
+
     @Enumerated(EnumType.STRING)
     PaymentType paymentType;
 

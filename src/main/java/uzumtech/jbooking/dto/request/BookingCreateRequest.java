@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import uzumtech.jbooking.constant.enums.PaymentType;
 import uzumtech.jbooking.dto.GuestDto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public record BookingCreateRequest (
@@ -15,8 +15,8 @@ public record BookingCreateRequest (
         @NotNull
         Long roomId,
 
-        LocalDate checkIn,
-        LocalDate checkOut,
+        LocalDateTime checkIn,
+        LocalDateTime checkOut,
 
         PaymentType paymentType,
 
