@@ -1,7 +1,7 @@
 package uzumtech.jbooking.dto.response;
 
 import uzumtech.jbooking.constant.enums.BoardBasis;
-import uzumtech.jbooking.constant.enums.CancellationPoliceType;
+import uzumtech.jbooking.constant.enums.CancellationPolicyType;
 import uzumtech.jbooking.constant.enums.RoomAvailabilityStatus;
 
 import java.math.BigDecimal;
@@ -12,7 +12,7 @@ public record RoomResponse(
         BigDecimal pricePerNight,
         Integer capacity,
         BoardBasis boardBasis,
-        CancellationPoliceType cancellationPoliceType,
+        CancellationPolicyType cancellationPolicyType,
         RoomAvailabilityStatus roomAvailabilityStatus,
         String description
 ){

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import uzumtech.jbooking.constant.enums.BoardBasis;
-import uzumtech.jbooking.constant.enums.CancellationPoliceType;
+import uzumtech.jbooking.constant.enums.CancellationPolicyType;
 import uzumtech.jbooking.constant.enums.RoomAvailabilityStatus;
 import uzumtech.jbooking.constant.enums.RoomType;
 
@@ -36,7 +36,7 @@ public class Room {
     BoardBasis boardBasis;
 
     @Enumerated(EnumType.STRING)
-    CancellationPoliceType  cancellationPoliceType;
+    CancellationPolicyType cancellationPolicyType;
 
     @Enumerated(EnumType.STRING)
     RoomAvailabilityStatus  roomAvailabilityStatus;

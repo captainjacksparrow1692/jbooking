@@ -1,7 +1,7 @@
 package uzumtech.jbooking.dto.request;
 
 import uzumtech.jbooking.constant.enums.BoardBasis;
-import uzumtech.jbooking.constant.enums.CancellationPoliceType;
+import uzumtech.jbooking.constant.enums.CancellationPolicyType;
 
 import java.time.LocalDate;
 
@@ -11,7 +11,7 @@ public record RoomSearchRequest(
         LocalDate checkOut,
         Integer guestsCount,
         BoardBasis boardBasis,
-        CancellationPoliceType cancellationPoliceType
+        CancellationPolicyType cancellationPolicyType
 ) {
 
 }

@@ -26,7 +26,7 @@ public record RoomCreateRequest(
         BoardBasis boardBasis, // RO, BB, HB, FB, AI
 
         @NotNull(message = "Cancellation policy is required")
-        CancellationPoliceType cancellationPolicy, // FREE_CANCELLATION, NON_REFUNDABLE
+        CancellationPolicyType cancellationPolicy, // FREE_CANCELLATION, NON_REFUNDABLE
 
         @NotNull(message = "Initial status is required")
         RoomAvailabilityStatus availabilityStatus, // Обычно AVAILABLE при создании
