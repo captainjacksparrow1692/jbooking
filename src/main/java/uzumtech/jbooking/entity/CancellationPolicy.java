@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import uzumtech.jbooking.constant.enums.PenaltyType;
 
+import java.math.BigDecimal;
+
 @Entity
 @Getter
 @Setter
@@ -21,6 +23,6 @@ public class CancellationPolicy {
     @Enumerated(EnumType.STRING)
     PenaltyType penaltyType;
 
-    Double penaltyValue;
+    BigDecimal penaltyValue;
     Integer daysBeforeCancel; //за сколько дней можно отметить без штрафа
 }
