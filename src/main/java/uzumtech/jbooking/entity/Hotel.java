@@ -24,8 +24,11 @@ public class Hotel {
 
     String name;
     String address;
-    String city;
     String description;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_id")
+    City city;
 
     @Enumerated(EnumType.STRING)
     AccommodationType accommodationType;
