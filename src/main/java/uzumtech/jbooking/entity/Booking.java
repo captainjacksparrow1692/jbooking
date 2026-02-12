@@ -3,10 +3,12 @@ package uzumtech.jbooking.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 import uzumtech.jbooking.constant.enums.BookingStatus;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -35,5 +37,8 @@ public class Booking {
     @Enumerated(EnumType.STRING)
     BookingStatus bookingStatus;
 
-    LocalDateTime createAt;
+    // Добавлена автоматическая генерация даты создания
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    LocalDateTime createdAt;
 }

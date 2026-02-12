@@ -1,9 +1,7 @@
 package uzumtech.jbooking.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 import uzumtech.jbooking.constant.enums.PaymentStatus;
 import uzumtech.jbooking.constant.enums.PaymentType;
@@ -15,6 +13,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "payments")
+@NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Payment {
 
@@ -22,9 +22,11 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    Long bookingId;
-    BigDecimal amount;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "booking_id")
+    Booking booking;
 
+    BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
     PaymentType paymentType;
