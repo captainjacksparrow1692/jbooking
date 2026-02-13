@@ -5,6 +5,11 @@ import uzumtech.jbooking.constant.enums.ErrorType;
 
 public class ResourceNotFoundException extends BusinessException {
     public ResourceNotFoundException(String message) {
-        super(20000, message, HttpStatus.NOT_FOUND, ErrorType.BUSINESS);
+        super(
+                20000,
+                message,
+                HttpStatus.NOT_FOUND,
+                ErrorType.BUSINESS
+        );
     }
 }
