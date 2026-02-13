@@ -39,8 +39,8 @@ public enum Error {
     REFUND_NOT_POSSIBLE_ERROR_CODE(40004, "Refund is not possible for this booking status"),
     DUPLICATE_PAYMENT_ERROR_CODE(40005, "Payment for this booking already processed");
 
-    private final int code;
-    private final String message;
+    final int code;
+    final String message;
 
     Error(int code, String message) {
         this.code = code;
