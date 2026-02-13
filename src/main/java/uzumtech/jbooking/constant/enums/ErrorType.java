@@ -4,5 +4,6 @@ public enum ErrorType {
     VALIDATION,
     BUSINESS,
     INTERNAL,
-    EXTERNAL
+    EXTERNAL,
+    SYSTEM
 }
