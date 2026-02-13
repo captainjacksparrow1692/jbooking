@@ -65,6 +65,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public PaymentStatus checkExternalStatus(String transactionId) {
+        //ищем транзакцию по базе айди который выдал банк
         return paymentRepository.findByTransactionId(transactionId)
                 .map(Payment::getPaymentStatus)
                 .orElseThrow(() -> new EntityNotFoundException("Payment with id: " + transactionId + " not found"));
@@ -75,9 +76,11 @@ public class PaymentServiceImpl implements PaymentService {
     public void refund(Long bookingId){
         log.info("Refunding booking with id: {}", bookingId);
 
+        //ищем успешный перевод для возврата
         Payment payment = paymentRepository.findByBookingIdAndPaymentStatus(bookingId, PaymentStatus.SUCCESS)
                 .orElseThrow(() -> new EntityNotFoundException("Payment with id: " + bookingId + " not found"));
 
+        //меняем статус платежа и брони
         payment.setPaymentStatus(PaymentStatus.FAILED);
         paymentRepository.save(payment);
 
