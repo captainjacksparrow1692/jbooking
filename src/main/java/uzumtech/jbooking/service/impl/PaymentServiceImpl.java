@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uzumtech.jbooking.constant.enums.*;
 import uzumtech.jbooking.constant.enums.Error;
+import uzumtech.jbooking.dto.request.BankWebhookRequest;
 import uzumtech.jbooking.dto.request.PaymentRequest;
 import uzumtech.jbooking.dto.response.PaymentResponse;
 import uzumtech.jbooking.entity.Booking;
-import uzumtech.jbooking.entity.CancellationPolicy;
 import uzumtech.jbooking.entity.Payment;
 import uzumtech.jbooking.exception.BusinessException;
 import uzumtech.jbooking.exception.ResourceNotFoundException;
@@ -72,7 +72,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    @Transactional // Важно для Dirty Checking
+    @Transactional
     public void refund(Long bookingId){
         log.info("Checking cancellation policy for bookingId: {}", bookingId);
 
@@ -104,5 +104,23 @@ public class PaymentServiceImpl implements PaymentService {
         booking.setBookingStatus(BookingStatus.CANCELLED);
 
         log.info("Refund successful for bookingId: {}", bookingId);
+    }
+
+    @Override
+    @Transactional
+    public void handleRefundWebhook(BankWebhookRequest request) {
+        // 1. Находим платеж по transactionId из DTO
+        Payment payment = paymentRepository.findByTransactionId(request.transactionId())
+                .orElseThrow(() -> new ResourceNotFoundException("Payment not found"));
+
+        // 2. Обновляем статус платежа
+        if ("SUCCESS".equals(request.paymentStatus())) {
+            payment.setPaymentStatus(PaymentStatus.REFUNDED);
+
+            // 3. Обновляем статус брони
+            payment.getBooking().setBookingStatus(BookingStatus.CANCELLED);
+
+            log.info("Refund confirmed for booking ID: {}", payment.getBooking().getId());
+        }
     }
 }
