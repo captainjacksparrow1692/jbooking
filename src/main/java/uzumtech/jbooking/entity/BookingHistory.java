@@ -11,20 +11,21 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
 @Table(name = "booking_history")
-@FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingHistory {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    Long bookingId;
+    @ManyToOne
+    @JoinColumn(name = "booking_id")
+    Booking booking;
 
     @Enumerated(EnumType.STRING)
-    HistoryActionType historyActionType;
+    HistoryActionType actionType;
+
+    @Enumerated(EnumType.STRING)
+    BookingStatus bookingStatus;
 
     LocalDateTime actionTimestamp;
     String details;
