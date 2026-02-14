@@ -2,7 +2,6 @@ package uzumtech.jbooking.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 import uzumtech.jbooking.constant.enums.BookingStatus;
 import uzumtech.jbooking.constant.enums.HistoryActionType;
 
@@ -22,7 +21,7 @@ public class BookingHistory {
     Booking booking;
 
     @Enumerated(EnumType.STRING)
-    HistoryActionType actionType;
+    HistoryActionType historyActionType;
 
     @Enumerated(EnumType.STRING)
     BookingStatus bookingStatus;

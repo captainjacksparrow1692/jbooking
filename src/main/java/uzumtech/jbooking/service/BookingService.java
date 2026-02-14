@@ -8,14 +8,16 @@ import uzumtech.jbooking.dto.response.BookingResponse;
 
 public interface BookingService {
 
-    // Создание бронирования (с проверкой дат и вместимости)
+    //создание брони и запись в букингхистори
     BookingResponse create(BookingCreateRequest request);
 
+    //возврат букингреспонса
     BookingResponse getById(Long id);
 
-    // Обновление статуса
+    // Каждое обновление статуса теперь создает новую запись в историю
     void updateStatus(BookingStatusUpdateRequest request);
 
+    //отмена
     void cancel(Long id);
 
     Page<BookingResponse> getAll(Pageable pageable);

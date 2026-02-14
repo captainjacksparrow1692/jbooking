@@ -19,6 +19,7 @@ public record BookingResponse(
         BookingStatus bookingStatus,
         PaymentType paymentType,
         List<GuestDto> guests,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        List<BookingHistoryResponse> history
 ) {
 }
