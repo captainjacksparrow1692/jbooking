@@ -19,7 +19,7 @@ public interface BookingMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "bookingStatus", ignore = true)
     @Mapping(target = "room", ignore = true)
-    @Mapping(target = "createAt", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     Booking toEntity(BookingCreateRequest request);
 
     BookingHistoryResponse toHistoryResponse(BookingHistory history);

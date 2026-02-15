@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16-alpine # Используем легкий и актуальный образ PostgreSQL
+    container_name: postgres_db
+
+    # Порт для доступа к базе данных
+    ports:
+      - "5435:5432"
+
+    environment:
+      # --- Обязательные учетные данные и имя БД ---
+      # Замените эти значения на ваши:
+      POSTGRES_DB: "jbooking"         # Имя базы данных, которая будет создана
+      POSTGRES_USER: "sparrow"           # Имя суперпользователя
+      POSTGRES_PASSWORD: "9376570167"   # Пароль для суперпользователя
+
+      # Отключение ведения журнала (для тестовых сред)
+      # PGDATA: /var/lib/postgresql/data/pgdata
+
+    # Сохранение данных в томе (для постоянства)
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    # Политика перезапуска
+    restart: always
+
+# Объявление внешнего тома для сохранения данных
+volumes:
+  postgres_data:
