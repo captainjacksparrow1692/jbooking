@@ -1,6 +1,5 @@
 package uzumtech.jbooking.service.impl;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -15,6 +14,7 @@ import uzumtech.jbooking.dto.response.HotelResponse;
 import uzumtech.jbooking.dto.response.HotelSearchResponse;
 import uzumtech.jbooking.entity.City;
 import uzumtech.jbooking.entity.Hotel;
+import uzumtech.jbooking.exception.ResourceNotFoundException;
 import uzumtech.jbooking.mapper.HotelMapper;
 import uzumtech.jbooking.repository.CityRepository;
 import uzumtech.jbooking.repository.HotelRepository;
@@ -35,7 +35,7 @@ public class HotelServiceImpl implements HotelService {
     public HotelResponse createHotel(HotelCreateRequest request) {
         // Проверяем существование города
         City cityEntity = cityRepository.findById(request.cityId())
-                .orElseThrow(() -> new EntityNotFoundException("City not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("City not found"));
 
         Hotel hotel = hotelMapper.toHotel(request);
         hotel.setCity(cityEntity);
@@ -58,14 +58,14 @@ public class HotelServiceImpl implements HotelService {
     public HotelResponse getById(Long id) {
         return hotelRepository.findById(id)
                 .map(hotelMapper::toHotelResponse)
-                .orElseThrow(() -> new EntityNotFoundException("Hotel not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Hotel not found"));
     }
 
     @Override
     @Transactional
     public void updateRating(Long hotelId, Double newRating) {
         Hotel hotel = hotelRepository.findById(hotelId)
-                .orElseThrow(() -> new EntityNotFoundException("Hotel not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Hotel not found"));
         hotel.setAverageRating(newRating);
         hotelRepository.save(hotel);
     }

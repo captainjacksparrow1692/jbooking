@@ -1,6 +1,5 @@
 package uzumtech.jbooking.service.impl;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -43,7 +42,7 @@ public class PaymentServiceImpl implements PaymentService {
         log.info("Processing Payment: {}", request.bookingId());
 
         Booking booking = bookingRepository.findById(request.bookingId())
-                .orElseThrow(() -> new EntityNotFoundException("Booking with id: " + request.bookingId() + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Booking with id: " + request.bookingId() + " not found"));
 
         Payment payment = new Payment();
         payment.setBooking(booking);
@@ -75,7 +74,7 @@ public class PaymentServiceImpl implements PaymentService {
     public PaymentStatus checkExternalStatus(String transactionId) {
         return paymentRepository.findByTransactionId(transactionId)
                 .map(Payment::getPaymentStatus)
-                .orElseThrow(() -> new EntityNotFoundException("Payment with id: " + transactionId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Payment with id: " + transactionId + " not found"));
     }
 
     @Override

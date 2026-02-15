@@ -1,6 +1,5 @@
 package uzumtech.jbooking.service.impl;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -11,10 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uzumtech.jbooking.constant.enums.RoomAvailabilityStatus;
 import uzumtech.jbooking.dto.request.RoomCreateRequest;
-import uzumtech.jbooking.dto.response.HotelResponse;
 import uzumtech.jbooking.dto.response.RoomResponse;
 import uzumtech.jbooking.entity.Hotel;
 import uzumtech.jbooking.entity.Room;
+import uzumtech.jbooking.exception.ResourceNotFoundException;
 import uzumtech.jbooking.mapper.RoomMapper;
 import uzumtech.jbooking.repository.HotelRepository;
 import uzumtech.jbooking.repository.RoomRepository;
@@ -34,7 +33,7 @@ public class RoomServiceImpl implements RoomService {
     @Transactional
     public RoomResponse create(RoomCreateRequest request){
         Hotel hotel = hotelRepository.findById(request.hotelId())
-                .orElseThrow(() -> new EntityNotFoundException("Hotel not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Hotel not found"));
 
         Room room = roomMapper.toEntity(request);
         room.setHotel(hotel);
@@ -55,14 +54,14 @@ public class RoomServiceImpl implements RoomService {
     public RoomResponse getById(Long id){
         return roomRepository.findById(id)
                 .map(roomMapper::toResponse)
-                .orElseThrow(() -> new EntityNotFoundException("Room not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found"));
     }
 
     @Override
     @Transactional
     public void updateAvailability(Long roomId, RoomAvailabilityStatus status){
         Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new EntityNotFoundException("Room not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found"));
         room.setRoomAvailabilityStatus(status);
         roomRepository.save(room);
     }
