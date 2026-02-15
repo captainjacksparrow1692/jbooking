@@ -14,15 +14,18 @@ import uzumtech.jbooking.dto.request.BankWebhookRequest;
 import uzumtech.jbooking.dto.request.PaymentRequest;
 import uzumtech.jbooking.dto.response.PaymentResponse;
 import uzumtech.jbooking.entity.Booking;
+import uzumtech.jbooking.entity.BookingHistory;
 import uzumtech.jbooking.entity.Payment;
 import uzumtech.jbooking.exception.BusinessException;
 import uzumtech.jbooking.exception.ResourceNotFoundException;
+import uzumtech.jbooking.repository.BookingHistoryRepository;
 import uzumtech.jbooking.repository.BookingRepository;
 import uzumtech.jbooking.repository.PaymentRepository;
 import uzumtech.jbooking.service.PaymentService;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
 
 @Service
 @Slf4j
@@ -32,6 +35,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     PaymentRepository paymentRepository;
     BookingRepository bookingRepository;
+    BookingHistoryRepository bookingHistoryRepository;
 
     @Override
     @Transactional
@@ -53,6 +57,9 @@ public class PaymentServiceImpl implements PaymentService {
 
         if (PaymentStatus.SUCCESS.equals(request.paymentStatus())) {
             booking.setBookingStatus(BookingStatus.CONFIRMED);
+
+            logAction(booking, HistoryActionType.PAYMENT, "Payment received successfully. Amount: " + payment.getAmount());
+
             log.info("Booking with id: {} has been confirmed", booking.getId());
         }
 
@@ -103,24 +110,38 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setPaymentStatus(PaymentStatus.REFUNDED);
         booking.setBookingStatus(BookingStatus.CANCELLED);
 
+        logAction(booking, HistoryActionType.REFUND, "Refund initiated. Amount: " + amountToRefund);
+
         log.info("Refund successful for bookingId: {}", bookingId);
     }
 
     @Override
     @Transactional
     public void handleRefundWebhook(BankWebhookRequest request) {
-        // 1. Находим платеж по transactionId из DTO
         Payment payment = paymentRepository.findByTransactionId(request.transactionId())
                 .orElseThrow(() -> new ResourceNotFoundException("Payment not found"));
 
-        // 2. Обновляем статус платежа
         if ("SUCCESS".equals(request.paymentStatus())) {
             payment.setPaymentStatus(PaymentStatus.REFUNDED);
 
-            // 3. Обновляем статус брони
-            payment.getBooking().setBookingStatus(BookingStatus.CANCELLED);
+            Booking booking = payment.getBooking();
+            booking.setBookingStatus(BookingStatus.CANCELLED);
 
-            log.info("Refund confirmed for booking ID: {}", payment.getBooking().getId());
+            logAction(booking, HistoryActionType.REFUND, "Refund confirmed by bank via webhook.");
+
+            log.info("Refund confirmed for booking ID: {}", booking.getId());
         }
+    }
+
+    //сохраняем запись в историю бронирования
+    private void logAction(Booking booking, HistoryActionType historyActionType, String details) {
+        BookingHistory history = new BookingHistory();
+        history.setBooking(booking);
+        history.setHistoryActionType(historyActionType);
+        history.setBookingStatus(booking.getBookingStatus());
+        history.setActionTimestamp(LocalDateTime.now());
+        history.setDetails(details);
+
+        bookingHistoryRepository.save(history);
     }
 }
