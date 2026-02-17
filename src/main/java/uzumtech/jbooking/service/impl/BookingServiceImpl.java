@@ -38,9 +38,11 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingResponse create(BookingCreateRequest request) {
-        if (!bookingRepository.isRoomAvailable(request.roomId(), request.checkIn(), request.checkOut())) {
-            throw new RuntimeException("Room is occupied for these dates");
-        }
+        boolean available = bookingRepository.isRoomAvailable(
+                request.roomId(),
+                request.checkInDate(),
+                request.checkOutDate()
+        );
 
         Room room = roomRepository.findById(request.roomId())
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found"));
@@ -59,6 +61,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BookingResponse getById(Long id) {
         return bookingRepository.findById(id)
                 .map(bookingMapper::toBookingResponse)
@@ -90,11 +93,13 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<BookingResponse> getAll(Pageable pageable) {
         return bookingRepository.findAll(pageable).map(bookingMapper::toBookingResponse);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<BookingResponse> getByUserId(Long userId, Pageable pageable) {
         return bookingRepository.findByUserId(userId, pageable).map(bookingMapper::toBookingResponse);
     }

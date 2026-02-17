@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import uzumtech.jbooking.constant.enums.BookingStatus;
 import uzumtech.jbooking.entity.Booking;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
@@ -22,7 +22,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                          uzumtech.jbooking.constant.enums.BookingStatus.HOLD)
         AND NOT (b.checkOutDate <= :checkIn OR b.checkInDate >= :checkOut)
     """)
-    boolean isRoomAvailable(Long roomId, LocalDateTime checkIn, LocalDateTime checkOut);
+    boolean isRoomAvailable(Long roomId, LocalDate checkIn, LocalDate checkOut);
 
     List<Booking> findByUserIdAndBookingStatus(Long userId, BookingStatus status);
 }

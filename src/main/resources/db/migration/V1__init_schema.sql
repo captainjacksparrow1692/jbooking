@@ -1,4 +1,4 @@
--- 1. География
+--города
 CREATE TABLE IF NOT EXISTS cities (
                                       id BIGSERIAL PRIMARY KEY,
                                       name VARCHAR(255) NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS cities (
                                       timezone VARCHAR(50)
 );
 
--- 2. Отели (расширенная версия)
+--отели
 CREATE TABLE IF NOT EXISTS hotels (
                                       id BIGSERIAL PRIMARY KEY,
                                       name VARCHAR(255) NOT NULL,
@@ -20,13 +20,13 @@ CREATE TABLE IF NOT EXISTS hotels (
                                       reviews_count INTEGER DEFAULT 0
 );
 
--- 3. Удобства отеля (для Set<Amenity>)
+--удобства отеля
 CREATE TABLE IF NOT EXISTS hotel_amenities (
                                                hotel_id BIGINT REFERENCES hotels(id),
                                                amenity VARCHAR(100)
 );
 
--- 4. Пересоздание Rooms под Java-сущность
+--комнаты
 DROP TABLE IF EXISTS rooms CASCADE;
 CREATE TABLE rooms (
                        id BIGSERIAL PRIMARY KEY,
@@ -40,7 +40,7 @@ CREATE TABLE rooms (
                        room_type VARCHAR(50)
 );
 
--- 5. Обновление Bookings
+--букинг
 DROP TABLE IF EXISTS bookings CASCADE;
 CREATE TABLE bookings (
                           id BIGSERIAL PRIMARY KEY,
@@ -53,7 +53,7 @@ CREATE TABLE bookings (
                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- 6. История бронирований (согласно BookingHistory.java)
+--история бронирований
 CREATE TABLE IF NOT EXISTS booking_history (
                                                id BIGSERIAL PRIMARY KEY,
                                                booking_id BIGINT REFERENCES bookings(id),
@@ -61,4 +61,32 @@ CREATE TABLE IF NOT EXISTS booking_history (
                                                booking_status VARCHAR(50),
                                                action_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                                details TEXT
+);
+
+-- Платежи
+CREATE TABLE IF NOT EXISTS payments (
+                                        id BIGSERIAL PRIMARY KEY,
+                                        booking_id BIGINT UNIQUE REFERENCES bookings(id),
+                                        amount DECIMAL(19, 2) NOT NULL,
+                                        transaction_id VARCHAR(255) UNIQUE,
+                                        payment_type VARCHAR(50),
+                                        payment_status VARCHAR(50),
+                                        payment_date TIMESTAMP
+);
+
+-- Политики отмены
+CREATE TABLE IF NOT EXISTS cancellation_policy (
+                                                   id BIGSERIAL PRIMARY KEY,
+                                                   penalty_type VARCHAR(50),
+                                                   penalty_value DECIMAL(19, 2),
+                                                   days_before_cancel INTEGER
+);
+
+-- Отзывы
+CREATE TABLE IF NOT EXISTS hotel_reviews (
+                                             id BIGSERIAL PRIMARY KEY,
+                                             hotel_id BIGINT NOT NULL REFERENCES hotels(id),
+                                             user_id BIGINT NOT NULL,
+                                             comment VARCHAR(1000),
+                                             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
