@@ -41,7 +41,7 @@ public class BookingController {
     }
 
     //изменение статуса
-    @PatchMapping("/status")
+    @PostMapping("/status")
     public ResponseEntity<Void> updateStatus(@Valid @RequestBody BookingStatusUpdateRequest request) {
         log.info("REST request to update booking status: {}", request);
         bookingService.updateStatus(request);

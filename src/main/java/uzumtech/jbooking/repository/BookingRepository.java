@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import uzumtech.jbooking.constant.enums.BookingStatus;
 import uzumtech.jbooking.entity.Booking;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
