@@ -12,9 +12,9 @@ import java.time.LocalDate;
 
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
 
-    Page<Hotel> findByCityCountryIgnoreCaseAndCityNameIgnoreCase(String country, String cityName);
+    Page<Hotel> findByCityCountryIgnoreCaseAndCityNameIgnoreCase(String country, String cityName, Pageable pageable);
 
-    Page<Hotel> findByAverageRatingGreaterThanEqualAndAccommodationType(Double rating, AccommodationType type);
+    Page<Hotel> findByAverageRatingGreaterThanEqualAndAccommodationType(Double rating, AccommodationType type, Pageable pageable);
 
     @Query("SELECT DISTINCT h FROM Hotel h JOIN h.rooms r WHERE h.city.name = :cityName " +
             "AND r.id NOT IN (SELECT b.room.id FROM Booking b " +

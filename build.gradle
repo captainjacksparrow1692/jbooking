@@ -52,8 +52,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	runtimeOnly 'org.postgresql:postgresql'
 
-	// Flyway для миграций БД
-	implementation 'org.springframework.boot:spring-boot-starter-flyway'
+	// Flyway для миграций БД// В блоке dependencies
+	implementation 'org.flywaydb:flyway-core'
 	implementation 'org.flywaydb:flyway-database-postgresql'
 
 	// Testing
