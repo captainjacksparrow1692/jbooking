@@ -5,14 +5,10 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uzumtech.jbooking.dto.request.BookingCreateRequest;
-import uzumtech.jbooking.dto.request.BookingStatusUpdateRequest;
 import uzumtech.jbooking.dto.response.BookingResponse;
 import uzumtech.jbooking.service.BookingService;
 
@@ -25,51 +21,41 @@ public class BookingController {
 
     BookingService bookingService;
 
-    //создание брони
+    // создание брони
     @PostMapping
-    public ResponseEntity<BookingResponse> create(@Valid @RequestBody BookingCreateRequest request) {
+    public ResponseEntity<BookingResponse> create(
+            @Valid @RequestBody BookingCreateRequest request) {
+
         log.info("REST request to create booking: {}", request);
+
         BookingResponse response = bookingService.create(request);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    //получить бронь по айди
-    @GetMapping("/{id}")
-    public ResponseEntity<BookingResponse> getById(@PathVariable Long id) {
-        log.info("REST request to get booking by id: {}", id);
-        return ResponseEntity.ok(bookingService.getById(id));
+    // получить свою бронь
+    @GetMapping("/{bookingId}")
+    public ResponseEntity<BookingResponse> getById(
+            @RequestParam Long userId,
+            @PathVariable Long bookingId) {
+
+        log.info("REST request to get booking {} for user {}", bookingId, userId);
+
+        return ResponseEntity.ok(
+                bookingService.getById(userId, bookingId)
+        );
     }
 
-    //изменение статуса
-    @PostMapping("/status")
-    public ResponseEntity<Void> updateStatus(@Valid @RequestBody BookingStatusUpdateRequest request) {
-        log.info("REST request to update booking status: {}", request);
-        bookingService.updateStatus(request);
+    // отменить свою бронь
+    @DeleteMapping("/{bookingId}/cancel")
+    public ResponseEntity<Void> cancelMyBooking(
+            @RequestParam Long userId,
+            @PathVariable Long bookingId) {
+
+        log.info("REST request to cancel booking {} for user {}", bookingId, userId);
+
+        bookingService.cancelMyBooking(userId, bookingId);
+
         return ResponseEntity.noContent().build();
-    }
-
-    //отмен брони
-    @DeleteMapping("/{id}/cancel")
-    public ResponseEntity<BookingResponse> cancel(@PathVariable Long id) {
-        log.info("REST request to cancel booking by id: {}", id);
-        bookingService.cancel(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    //получение всех броней
-    @GetMapping
-    public ResponseEntity<Page<BookingResponse>> getAll(
-            @PageableDefault(size = 20)Pageable pageable) {
-        log.info("REST request to get all bookings with pagination");
-        return ResponseEntity.ok(bookingService.getAll(pageable));
-    }
-
-    //бронь конкретного пользователя
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<Page<BookingResponse>> getByUserId(
-            @PathVariable Long userId,
-            @PageableDefault(size = 20) Pageable pageable) {
-        log.info("REST request to get bookings for user: {}", userId);
-        return ResponseEntity.ok(bookingService.getByUserId(userId, pageable));
     }
 }

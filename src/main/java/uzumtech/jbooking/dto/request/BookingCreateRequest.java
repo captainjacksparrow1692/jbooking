@@ -1,27 +1,28 @@
 package uzumtech.jbooking.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import uzumtech.jbooking.constant.enums.PaymentType;
-import uzumtech.jbooking.dto.GuestDto;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public record BookingCreateRequest (
-        @NotNull
+        @NotNull(message = "User ID is required")
         Long userId,
 
-        @NotNull
+        @NotNull(message = "Room ID is required")
         Long roomId,
 
+        @NotNull @FutureOrPresent
         @JsonProperty("checkInDate")
         LocalDate checkInDate,
 
+        @NotNull @Future
         @JsonProperty("checkOutDate")
         LocalDate checkOutDate,
 
-        PaymentType paymentType,
-
-        List<GuestDto> guests
+        @NotNull
+        PaymentType paymentType
 ){}

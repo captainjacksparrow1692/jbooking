@@ -1,11 +1,20 @@
 package uzumtech.jbooking.dto.request;
 
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import uzumtech.jbooking.constant.enums.PaymentStatus;
+
 import java.math.BigDecimal;
 
 public record BankWebhookRequest (
-        String transactionId, // Уникальный ID транзакции в банке
-        String paymentStatus, // Статус от банка
-        BigDecimal amount, // Сумма транзакции
-        String type // Тип события
+        @NotNull
+        String transactionId,   // Уникальный ID транзакции во внешней системе
+
+        @NotNull
+        PaymentStatus paymentStatus,
+
+        @NotNull
+        @Positive
+        BigDecimal amount
 ){
 }

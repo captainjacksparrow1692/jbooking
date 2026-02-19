@@ -10,9 +10,6 @@ public interface PaymentService {
     // Обработка транзакции
     PaymentResponse processPayment(PaymentRequest request);
 
-    // Проверка статуса во внешней системе
-    PaymentStatus checkExternalStatus(String transactionId);
-
     // Возврат средств при отмене
     void refund(Long bookingId);
 

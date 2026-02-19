@@ -5,7 +5,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import uzumtech.jbooking.constant.enums.BoardBasis;
 import uzumtech.jbooking.constant.enums.CancellationPolicyType;
-import uzumtech.jbooking.constant.enums.RoomAvailabilityStatus;
 import uzumtech.jbooking.constant.enums.RoomType;
 
 import java.math.BigDecimal;
@@ -37,9 +36,6 @@ public class Room {
 
     @Enumerated(EnumType.STRING)
     CancellationPolicyType cancellationPolicyType;
-
-    @Enumerated(EnumType.STRING)
-    RoomAvailabilityStatus  roomAvailabilityStatus;
 
     @Enumerated(EnumType.STRING)
     RoomType roomType;

@@ -7,6 +7,7 @@ import uzumtech.jbooking.entity.Payment;
 import java.util.Optional;
 
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
-    Optional<Payment> findByBookingIdAndPaymentStatus(Long bookingId, PaymentStatus status);
     Optional<Payment> findByTransactionId(String transactionId);
+    // Важно для поиска успешного платежа перед возвратом
+    Optional<Payment> findByBookingIdAndPaymentStatus(Long bookingId, PaymentStatus status);
 }

@@ -8,11 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uzumtech.jbooking.constant.enums.RoomAvailabilityStatus;
-import uzumtech.jbooking.dto.request.RoomCreateRequest;
+import uzumtech.jbooking.dto.request.RoomSearchRequest;
 import uzumtech.jbooking.dto.response.RoomResponse;
-import uzumtech.jbooking.entity.Hotel;
-import uzumtech.jbooking.entity.Room;
 import uzumtech.jbooking.exception.ResourceNotFoundException;
 import uzumtech.jbooking.mapper.RoomMapper;
 import uzumtech.jbooking.repository.HotelRepository;
@@ -23,6 +20,7 @@ import uzumtech.jbooking.service.RoomService;
 @Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+@Transactional(readOnly = true) // Только чтение для пользователя
 public class RoomServiceImpl implements RoomService {
 
     RoomRepository roomRepository;
@@ -30,39 +28,32 @@ public class RoomServiceImpl implements RoomService {
     HotelRepository hotelRepository;
 
     @Override
-    @Transactional
-    public RoomResponse create(RoomCreateRequest request){
-        Hotel hotel = hotelRepository.findById(request.hotelId())
-                .orElseThrow(() -> new ResourceNotFoundException("Hotel not found"));
+    public Page<RoomResponse> getRoomsByHotel(Long hotelId, Pageable pageable) {
+        log.info("Fetching rooms for hotel id: {}", hotelId);
 
-        Room room = roomMapper.toEntity(request);
-        room.setHotel(hotel);
-        room.setRoomAvailabilityStatus(RoomAvailabilityStatus.AVAILABLE);
+        // Проверяем существование отеля перед поиском комнат
+        if (!hotelRepository.existsById(hotelId)) {
+            throw new ResourceNotFoundException("Hotel not found");
+        }
 
-        return roomMapper.toResponse(roomRepository.save(room));
-    }
-
-    @Override
-    public Page<RoomResponse> getRoomsByHotel(Long hotelId, Pageable  pageable) {
-        return roomRepository.findByHotelIdAndCapacityGreaterThanEqualAndRoomAvailabilityStatus(
-                hotelId, 1, RoomAvailabilityStatus.AVAILABLE, pageable
-        )
+        return roomRepository.findByHotelId(hotelId, pageable)
                 .map(roomMapper::toResponse);
     }
 
     @Override
-    public RoomResponse getById(Long id){
-        return roomRepository.findById(id)
-                .map(roomMapper::toResponse)
-                .orElseThrow(() -> new ResourceNotFoundException("Room not found"));
+    public Page<RoomResponse> searchRooms(RoomSearchRequest request, Pageable pageable) {
+        log.info("Searching rooms with criteria: {}", request);
+
+        // Здесь в идеале должна быть логика через Specification или @Query
+        // для проверки дат бронирования. Пока возвращаем по hotelId.
+        return roomRepository.findByHotelId(request.hotelId(), pageable)
+                .map(roomMapper::toResponse);
     }
 
     @Override
-    @Transactional
-    public void updateAvailability(Long roomId, RoomAvailabilityStatus status){
-        Room room = roomRepository.findById(roomId)
+    public RoomResponse getById(Long id) {
+        return roomRepository.findById(id)
+                .map(roomMapper::toResponse)
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found"));
-        room.setRoomAvailabilityStatus(status);
-        roomRepository.save(room);
     }
 }

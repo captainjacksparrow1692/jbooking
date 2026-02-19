@@ -5,7 +5,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import uzumtech.jbooking.constant.enums.*;
 
-import java.util.Set;
 import java.util.List;
 
 @Entity
@@ -33,21 +32,6 @@ public class Hotel {
     @Enumerated(EnumType.STRING)
     AccommodationType accommodationType;
 
-    @Enumerated(EnumType.STRING)
-    HotelBrand hotelBrand;
-
-    @ElementCollection(targetClass = Amenity.class)
-    @CollectionTable(name = "hotel_amenities", joinColumns = @JoinColumn(name = "hotel_id"))
-    @Enumerated(EnumType.STRING)
-    @Column(name = "amenity")
-    Set<Amenity> amenities;
-
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
     List<Room> rooms;
-
-    @Column(name = "average_rating")
-    Double averageRating = 0.0;
-
-    @Column(name = "reviews_count")
-    Integer reviewsCount = 0;
 }

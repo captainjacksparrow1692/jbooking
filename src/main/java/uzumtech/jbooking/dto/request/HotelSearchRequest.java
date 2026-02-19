@@ -1,20 +1,16 @@
 package uzumtech.jbooking.dto.request;
 
 import uzumtech.jbooking.constant.enums.AccommodationType;
-import uzumtech.jbooking.constant.enums.HotelBrand;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public record HotelSearchRequest(
-
         String country,
-        String city,
+        Long cityId,
 
-        LocalDateTime checkIn,
-        LocalDateTime checkOut,
+        LocalDate checkIn,
+        LocalDate checkOut,
 
         Double minRating,
-        AccommodationType accommodationType,
-        HotelBrand hotelBrand
-) {
-}
+        AccommodationType accommodationType
+) {}

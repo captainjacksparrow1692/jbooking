@@ -8,9 +8,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uzumtech.jbooking.dto.request.CityCreateRequest;
+import uzumtech.jbooking.dto.request.CitySearchRequest;
 import uzumtech.jbooking.dto.response.CityResponse;
-import uzumtech.jbooking.entity.City;
 import uzumtech.jbooking.exception.ResourceNotFoundException;
 import uzumtech.jbooking.mapper.CityMapper;
 import uzumtech.jbooking.repository.CityRepository;
@@ -26,13 +25,6 @@ public class CityServiceImpl implements CityService {
     CityMapper cityMapper;
 
     @Override
-    @Transactional
-    public CityResponse create(CityCreateRequest request) {
-        City city = cityMapper.toEntity(request);
-        return cityMapper.toResponse(cityRepository.save(city));
-    }
-
-    @Override
     public CityResponse getById(Long id) {
         return  cityRepository.findById(id)
                 .map(cityMapper::toResponse)
@@ -40,7 +32,17 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public Page<CityResponse> getAll(Pageable pageable) {
-        return cityRepository.findAll(pageable).map(cityMapper::toResponse);
+    @Transactional(readOnly = true)
+    public Page<CityResponse> searchCities(CitySearchRequest request, Pageable pageable) {
+        log.info("Searching cities by request: {}", request);
+
+        // Если параметров поиска нет, возвращаем просто все города с пагинацией
+        if (request.name() == null && request.country() == null) {
+            return cityRepository.findAll(pageable).map(cityMapper::toResponse);
+        }
+
+        // В простом варианте ищем по названию, если оно передано
+        return cityRepository.findByNameContainingIgnoreCase(request.name(), pageable)
+                .map(cityMapper::toResponse);
     }
 }

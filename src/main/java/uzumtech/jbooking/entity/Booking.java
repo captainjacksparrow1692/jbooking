@@ -8,7 +8,6 @@ import uzumtech.jbooking.constant.enums.BookingStatus;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Getter
@@ -27,8 +26,9 @@ public class Booking {
     @JoinColumn(name = "room_id")
     Room room;
 
-    @Column(name = "user_id")
-    Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    User user;
 
     LocalDate checkInDate;
     LocalDate checkOutDate;

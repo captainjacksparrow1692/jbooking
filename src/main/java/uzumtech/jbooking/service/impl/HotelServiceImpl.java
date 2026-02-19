@@ -8,17 +8,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import uzumtech.jbooking.dto.request.HotelCreateRequest;
 import uzumtech.jbooking.dto.request.HotelSearchRequest;
-import uzumtech.jbooking.dto.response.HotelResponse;
 import uzumtech.jbooking.dto.response.HotelSearchResponse;
 import uzumtech.jbooking.entity.City;
-import uzumtech.jbooking.entity.Hotel;
 import uzumtech.jbooking.exception.ResourceNotFoundException;
 import uzumtech.jbooking.mapper.HotelMapper;
 import uzumtech.jbooking.repository.CityRepository;
 import uzumtech.jbooking.repository.HotelRepository;
 import uzumtech.jbooking.service.HotelService;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -31,48 +30,21 @@ public class HotelServiceImpl implements HotelService {
     HotelMapper hotelMapper;
 
     @Override
-    @Transactional
-    public HotelResponse createHotel(HotelCreateRequest request) {
-        // Проверяем существование города
-        City cityEntity = cityRepository.findById(request.cityId())
+    @Transactional(readOnly = true)
+    public List<HotelSearchResponse> searchHotel(HotelSearchRequest request) {
+
+        // 1. Проверяем город
+        cityRepository.findById(request.cityId())
                 .orElseThrow(() -> new ResourceNotFoundException("City not found"));
 
-        Hotel hotel = hotelMapper.toHotel(request);
-        hotel.setCity(cityEntity);
-
-        return hotelMapper.toHotelResponse(hotelRepository.save(hotel));
-    }
-
-    @Override
-    public Page<HotelSearchResponse> searchHotel(HotelSearchRequest request, Pageable pageable) {
-
-        return hotelRepository.findAvailableHotels(
-                request.city(),
-                request.checkIn().toLocalDate(),
-                request.checkOut().toLocalDate(),
-                pageable)
-                .map(hotelMapper::toHotelSearchResponse);
-    }
-
-    @Override
-    public HotelResponse getById(Long id) {
-        return hotelRepository.findById(id)
-                .map(hotelMapper::toHotelResponse)
-                .orElseThrow(() -> new ResourceNotFoundException("Hotel not found"));
-    }
-
-    @Override
-    @Transactional
-    public void updateRating(Long hotelId, Double newRating) {
-        Hotel hotel = hotelRepository.findById(hotelId)
-                .orElseThrow(() -> new ResourceNotFoundException("Hotel not found"));
-        hotel.setAverageRating(newRating);
-        hotelRepository.save(hotel);
-    }
-
-    @Override
-    @Transactional
-    public void delete(Long id) {
-        hotelRepository.deleteById(id);
+        // 2. Поиск и маппинг
+        return hotelRepository.findByCityId(
+                        request.cityId(),
+                        request.checkIn(),
+                        request.checkOut()
+                )
+                .stream()
+                .map(hotelMapper::toHotelSearchResponse)
+                .toList();
     }
 }

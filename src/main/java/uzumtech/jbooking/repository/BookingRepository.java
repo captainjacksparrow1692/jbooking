@@ -1,28 +1,30 @@
 package uzumtech.jbooking.repository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import uzumtech.jbooking.constant.enums.BookingStatus;
+import org.springframework.data.repository.query.Param;
 import uzumtech.jbooking.entity.Booking;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Optional;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
-    Page<Booking> findByUserId(Long userId, Pageable pageable);
-
+    // Проверка доступности комнаты
     @Query("""
-        SELECT COUNT(b) = 0 
-        FROM Booking b 
-        WHERE b.room.id = :roomId 
-        AND b.bookingStatus IN (uzumtech.jbooking.constant.enums.BookingStatus.CONFIRMED, 
-                         uzumtech.jbooking.constant.enums.BookingStatus.HOLD)
-        AND NOT (b.checkOutDate <= :checkIn OR b.checkInDate >= :checkOut)
+        SELECT CASE WHEN COUNT(b) = 0 THEN true ELSE false END
+        FROM Booking b
+        WHERE b.room.id = :roomId
+        AND b.bookingStatus <> 'CANCELLED'
+        AND (
+            :checkIn < b.checkOutDate AND
+            :checkOut > b.checkInDate
+        )
     """)
-    boolean isRoomAvailable(Long roomId, LocalDate checkIn, LocalDate checkOut);
+    boolean isRoomAvailable(@Param("roomId") Long roomId,
+                            @Param("checkIn") LocalDate checkIn,
+                            @Param("checkOut") LocalDate checkOut);
 
-    List<Booking> findByUserIdAndBookingStatus(Long userId, BookingStatus status);
+    // Найти бронь пользователя
+    Optional<Booking> findByIdAndUserId(Long id, Long userId);
 }

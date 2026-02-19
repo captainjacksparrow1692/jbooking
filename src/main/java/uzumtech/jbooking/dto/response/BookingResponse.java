@@ -1,25 +1,38 @@
 package uzumtech.jbooking.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import uzumtech.jbooking.constant.enums.BookingStatus;
 import uzumtech.jbooking.constant.enums.PaymentType;
-import uzumtech.jbooking.dto.GuestDto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 public record BookingResponse(
         Long bookingId,
-        Long roomId,
+
         String hotelName,
+        String hotelAddress,
+
+        Long roomId,
+        String roomNumber,
+        String roomType,
+
+        @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate checkIn,
+
+        @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate checkOut,
+
         BigDecimal totalPrice,
+
         BookingStatus bookingStatus,
         PaymentType paymentType,
-        List<GuestDto> guests,
+
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime createdAt,
-        List<BookingHistoryResponse> history
+
+        // Время, до которого держится бронь (если статус HOLD)
+        LocalDateTime holdUntil
 ) {
 }
