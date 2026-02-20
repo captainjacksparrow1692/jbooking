@@ -21,15 +21,6 @@ public class RoomController {
 
     RoomService roomService;
 
-    //получаем список комнат определенного отеля
-    @GetMapping("/hotel/{hotelId}")
-    public ResponseEntity<Page<RoomResponse>> getRoomsByHotel(
-            @PathVariable Long hotelId,
-            Pageable pageable) {
-        log.info("REST request to get rooms for hotel: {}", hotelId);
-        return ResponseEntity.ok(roomService.getRoomsByHotel(hotelId, pageable));
-    }
-
     //инфа комнаты что там и как
     @GetMapping("/{id}")
     public ResponseEntity<RoomResponse> getById(@PathVariable Long id) {
