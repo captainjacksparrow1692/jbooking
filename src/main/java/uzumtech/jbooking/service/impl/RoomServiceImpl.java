@@ -31,11 +31,6 @@ public class RoomServiceImpl implements RoomService {
     public Page<RoomResponse> getRoomsByHotel(Long hotelId, Pageable pageable) {
         log.info("Fetching rooms for hotel id: {}", hotelId);
 
-        // Проверяем существование отеля перед поиском комнат
-        if (!hotelRepository.existsById(hotelId)) {
-            throw new ResourceNotFoundException("Hotel not found");
-        }
-
         return roomRepository.findByHotelId(hotelId, pageable)
                 .map(roomMapper::toResponse);
     }
@@ -44,8 +39,6 @@ public class RoomServiceImpl implements RoomService {
     public Page<RoomResponse> searchRooms(RoomSearchRequest request, Pageable pageable) {
         log.info("Searching rooms with criteria: {}", request);
 
-        // Здесь в идеале должна быть логика через Specification или @Query
-        // для проверки дат бронирования. Пока возвращаем по hotelId.
         return roomRepository.findByHotelId(request.hotelId(), pageable)
                 .map(roomMapper::toResponse);
     }

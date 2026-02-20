@@ -36,12 +36,6 @@ public class CityServiceImpl implements CityService {
     public Page<CityResponse> searchCities(CitySearchRequest request, Pageable pageable) {
         log.info("Searching cities by request: {}", request);
 
-        // Если параметров поиска нет, возвращаем просто все города с пагинацией
-        if (request.name() == null && request.country() == null) {
-            return cityRepository.findAll(pageable).map(cityMapper::toResponse);
-        }
-
-        // В простом варианте ищем по названию, если оно передано
         return cityRepository.findByNameContainingIgnoreCase(request.name(), pageable)
                 .map(cityMapper::toResponse);
     }
