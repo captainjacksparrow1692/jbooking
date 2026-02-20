@@ -26,6 +26,8 @@ CREATE TABLE IF NOT EXISTS hotels (
                                       description TEXT,
                                       city_id BIGINT REFERENCES cities(id),
                                       accommodation_type VARCHAR(50),
+                                      brand VARCHAR(50),
+                                      amenities TEXT,
                                       average_rating DOUBLE PRECISION DEFAULT 0.0,
                                       reviews_count INTEGER DEFAULT 0
 );
@@ -63,5 +65,6 @@ CREATE TABLE IF NOT EXISTS payments (
                                         transaction_id VARCHAR(255) UNIQUE,
                                         payment_type VARCHAR(50),
                                         payment_status VARCHAR(50),
-                                        payment_date TIMESTAMP
+                                        payment_date TIMESTAMP,
+                                        provider VARCHAR(100)
 );

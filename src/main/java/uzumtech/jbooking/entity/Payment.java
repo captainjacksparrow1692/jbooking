@@ -38,4 +38,6 @@ public class Payment {
     PaymentStatus paymentStatus;
 
     LocalDateTime paymentDate;
+
+    String provider;
 }

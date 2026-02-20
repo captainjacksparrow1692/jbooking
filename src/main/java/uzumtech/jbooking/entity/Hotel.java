@@ -29,6 +29,16 @@ public class Hotel {
     @JoinColumn(name = "city_id")
     City city;
 
+    String brand;
+
+    @Column(name = "average_rating")
+    Double averageRating;
+
+    @Column(name = "reviews_count")
+    Long reviewsCount;
+
+    String amenities;
+
     @Enumerated(EnumType.STRING)
     AccommodationType accommodationType;
 

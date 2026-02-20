@@ -33,6 +33,8 @@ public class Booking {
     LocalDate checkInDate;
     LocalDate checkOutDate;
     LocalDateTime holdUntil;
+    Integer guestsCount;
+    Long totalPrice;
 
     @Enumerated(EnumType.STRING)
     BookingStatus bookingStatus;
