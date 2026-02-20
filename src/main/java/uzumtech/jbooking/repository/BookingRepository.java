@@ -12,14 +12,19 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     // Проверка доступности комнаты
     @Query("""
-        SELECT CASE WHEN COUNT(b) = 0 THEN true ELSE false END
-        FROM Booking b
-        WHERE b.room.id = :roomId
-        AND b.bookingStatus <> 'CANCELLED'
-        AND (
-            :checkIn < b.checkOutDate AND
-            :checkOut > b.checkInDate
-        )
+    SELECT CASE WHEN COUNT(b) = 0 THEN true ELSE false END
+    FROM Booking b
+    WHERE b.room.id = :roomId
+      AND b.bookingStatus <> uzumtech.jbooking.constant.enums.BookingStatus.CANCELLED
+      AND (
+          :checkIn < b.checkOutDate AND
+          :checkOut > b.checkInDate
+      )
+      AND (
+          b.bookingStatus <> uzumtech.jbooking.constant.enums.BookingStatus.HOLD
+          OR b.holdUntil IS NULL
+          OR b.holdUntil > CURRENT_TIMESTAMP
+      )
     """)
     boolean isRoomAvailable(@Param("roomId") Long roomId,
                             @Param("checkIn") LocalDate checkIn,
