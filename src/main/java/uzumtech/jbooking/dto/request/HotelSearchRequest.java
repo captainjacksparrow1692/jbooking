@@ -12,5 +12,7 @@ public record HotelSearchRequest(
         LocalDate checkOut,
 
         Double minRating,
-        AccommodationType accommodationType
+        AccommodationType accommodationType,
+        Integer guestsCount,
+
 ) {}

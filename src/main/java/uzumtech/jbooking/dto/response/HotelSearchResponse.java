@@ -15,6 +15,7 @@ public record HotelSearchResponse(
         Double averageRating,
         Integer reviewsCount,
         BigDecimal minPricePerNight,
-        String description
-) {
-}
+        String description,
+        String brand,
+        String amenities
+) {}

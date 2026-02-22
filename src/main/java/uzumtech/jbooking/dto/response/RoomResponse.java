@@ -13,7 +13,6 @@ public record RoomResponse(
         BigDecimal pricePerNight,
         Integer capacity,
         BoardBasis boardBasis,
-        CancellationPolicyType cancellationPolicyType,
-        String description
+        CancellationPolicyType cancellationPolicyType
 ){
 }
