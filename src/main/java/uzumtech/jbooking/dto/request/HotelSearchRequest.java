@@ -13,6 +13,5 @@ public record HotelSearchRequest(
 
         Double minRating,
         AccommodationType accommodationType,
-        Integer guestsCount,
-
+        Integer guestsCount
 ) {}

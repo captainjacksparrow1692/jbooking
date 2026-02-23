@@ -24,5 +24,8 @@ public record BookingCreateRequest (
         LocalDate checkOutDate,
 
         @NotNull
+        Integer guestsCount,
+
+        @NotNull
         PaymentType paymentType
 ){}

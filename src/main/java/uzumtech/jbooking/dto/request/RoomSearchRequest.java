@@ -10,7 +10,8 @@ public record RoomSearchRequest(
         LocalDateTime checkIn,
         LocalDateTime checkOut,
         BoardBasis boardBasis,
-        CancellationPolicyType cancellationPolicyType
+        CancellationPolicyType cancellationPolicyType,
+        Integer guestsCount
 ) {
 
 }
