@@ -8,9 +8,6 @@ import uzumtech.jbooking.dto.response.RoomResponse;
 public interface RoomService {
     RoomResponse getById(Long id);
 
-    // Получение комнат конкретного отеля (простой список)
-    Page<RoomResponse> getRoomsByHotel(Long hotelId, Pageable pageable);
-
     // Поиск комнат по фильтрам пользователя (даты, питание и т.д.)
     Page<RoomResponse> searchRooms(RoomSearchRequest request, Pageable pageable);
 }

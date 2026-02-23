@@ -30,18 +30,17 @@ public class HotelServiceImpl implements HotelService {
     HotelMapper hotelMapper;
 
     @Override
-    @Transactional(readOnly = true)
     public List<HotelSearchResponse> searchHotel(HotelSearchRequest request) {
 
-        // 1. Проверяем город
         cityRepository.findById(request.cityId())
                 .orElseThrow(() -> new ResourceNotFoundException("City not found"));
 
-        // 2. Поиск и маппинг
-        return hotelRepository.findByCityId(
+        return hotelRepository.searchAvailableHotels(
                         request.cityId(),
                         request.checkIn(),
-                        request.checkOut()
+                        request.checkOut(),
+                        request.minRating(),
+                        request.accommodationType()
                 )
                 .stream()
                 .map(hotelMapper::toHotelSearchResponse)

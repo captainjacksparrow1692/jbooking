@@ -28,18 +28,18 @@ public class RoomServiceImpl implements RoomService {
     HotelRepository hotelRepository;
 
     @Override
-    public Page<RoomResponse> getRoomsByHotel(Long hotelId, Pageable pageable) {
-        log.info("Fetching rooms for hotel id: {}", hotelId);
-
-        return roomRepository.findByHotelId(hotelId, pageable)
-                .map(roomMapper::toResponse);
-    }
-
-    @Override
     public Page<RoomResponse> searchRooms(RoomSearchRequest request, Pageable pageable) {
         log.info("Searching rooms with criteria: {}", request);
 
-        return roomRepository.findByHotelId(request.hotelId(), pageable)
+        return roomRepository.searchAvailableRooms(
+                        request.hotelId(),
+                        request.checkIn().toLocalDate(),
+                        request.checkOut().toLocalDate(),
+                        null, // guestsCount пока не фильтруем
+                        request.boardBasis(),
+                        request.cancellationPolicyType(),
+                        pageable
+                )
                 .map(roomMapper::toResponse);
     }
 

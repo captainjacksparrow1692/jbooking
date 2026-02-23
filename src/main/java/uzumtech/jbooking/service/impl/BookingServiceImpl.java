@@ -32,34 +32,32 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingResponse create(BookingCreateRequest request) {
+        return roomRepository.findById(request.roomId())
+                .map(room -> {
+                    boolean available = bookingRepository.isRoomAvailable(
+                            room.getId(),
+                            request.checkInDate(),
+                            request.checkOutDate()
+                    );
 
-        Room room = roomRepository.findById(request.roomId())
+                    if (!available) {
+                        throw new IllegalStateException("Room is not available for selected dates");
+                    }
+
+                    Booking booking = bookingMapper.toEntity(request);
+                    booking.setRoom(room);
+                    booking.setBookingStatus(BookingStatus.HOLD);
+                    booking.setCreatedAt(LocalDateTime.now());
+                    booking.setHoldUntil(LocalDateTime.now().plusMinutes(15));
+
+                    Booking saved = bookingRepository.save(booking);
+
+                    return bookingMapper.toBookingResponse(saved);
+                })
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found"));
-
-        boolean available = bookingRepository.isRoomAvailable(
-                request.roomId(),
-                request.checkInDate(),
-                request.checkOutDate()
-        );
-
-        if (!available) {
-            throw new IllegalStateException("Room is not available for selected dates");
-        }
-
-        Booking booking = bookingMapper.toEntity(request);
-
-        booking.setRoom(room);
-        booking.setBookingStatus(BookingStatus.HOLD);
-        booking.setCreatedAt(LocalDateTime.now());
-        booking.setHoldUntil(LocalDateTime.now().plusMinutes(15));
-
-        Booking savedBooking = bookingRepository.save(booking);
-
-        return bookingMapper.toBookingResponse(savedBooking);
     }
 
     @Override
-    @Transactional(readOnly = true)
     public BookingResponse getById(Long userId, Long bookingId) {
         Booking booking = bookingRepository
                 .findByIdAndUserId(bookingId, userId)

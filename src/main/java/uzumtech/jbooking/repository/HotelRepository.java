@@ -11,9 +11,6 @@ import java.util.List;
 
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
 
-    // Поиск всех отелей в конкретном городе
-    List<Hotel> findByCityId(Long cityId);
-
     //поиск по городу и датам
     @Query("""
         SELECT DISTINCT h

@@ -32,7 +32,6 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public Page<CityResponse> searchCities(CitySearchRequest request, Pageable pageable) {
         log.info("Searching cities by request: {}", request);
 
