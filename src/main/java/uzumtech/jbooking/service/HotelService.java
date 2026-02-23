@@ -1,12 +1,12 @@
 package uzumtech.jbooking.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import uzumtech.jbooking.dto.request.HotelSearchRequest;
 import uzumtech.jbooking.dto.response.HotelSearchResponse;
-
-import java.util.List;
 
 public interface HotelService {
 
     // поиск отелей со свободными номерами на даты
-    List<HotelSearchResponse> searchHotel(HotelSearchRequest request);
+    Page<HotelSearchResponse> searchHotel(HotelSearchRequest request, Pageable pageable);
 }

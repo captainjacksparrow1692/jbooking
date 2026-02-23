@@ -5,11 +5,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import uzumtech.jbooking.constant.Constant;
+import uzumtech.jbooking.constant.enums.Error;
 import uzumtech.jbooking.dto.request.RoomSearchRequest;
 import uzumtech.jbooking.dto.response.RoomResponse;
+import uzumtech.jbooking.exception.BookingValidationException;
 import uzumtech.jbooking.exception.ResourceNotFoundException;
 import uzumtech.jbooking.mapper.RoomMapper;
 import uzumtech.jbooking.repository.HotelRepository;
@@ -25,20 +29,38 @@ public class RoomServiceImpl implements RoomService {
 
     RoomRepository roomRepository;
     RoomMapper roomMapper;
-    HotelRepository hotelRepository;
 
     @Override
     public Page<RoomResponse> searchRooms(RoomSearchRequest request, Pageable pageable) {
         log.info("Searching rooms with criteria: {}", request);
 
+        if (request.checkIn() != null && request.checkOut() != null
+                && !request.checkIn().isBefore(request.checkOut())) {
+            throw new BookingValidationException(
+                    Error.INVALID_BOOKING_DATES_ERROR_CODE.getCode(),
+                    Error.INVALID_BOOKING_DATES_ERROR_CODE.getMessage()
+            );
+        }
+
+        Pageable safePageable = pageable;
+        if (safePageable == null || safePageable.isUnpaged()) {
+            safePageable = PageRequest.of(0, Constant.DEFAULT_PAGE_SIZE);
+        } else if (safePageable.getPageSize() > Constant.MAX_PAGE_SIZE) {
+            safePageable = PageRequest.of(
+                    safePageable.getPageNumber(),
+                    Constant.MAX_PAGE_SIZE,
+                    safePageable.getSort()
+            );
+        }
+
         return roomRepository.searchAvailableRooms(
                         request.hotelId(),
                         request.checkIn().toLocalDate(),
                         request.checkOut().toLocalDate(),
-                        null, // guestsCount пока не фильтруем
+                        request.guestsCount(),
                         request.boardBasis(),
                         request.cancellationPolicyType(),
-                        pageable
+                        safePageable
                 )
                 .map(roomMapper::toResponse);
     }

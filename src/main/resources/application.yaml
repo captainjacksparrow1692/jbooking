@@ -29,28 +29,9 @@ spring:
     enabled: true
     schemas: ${DB_SCHEMA:public}
 
-  data:
-    redis:
-      host: ${REDIS_HOST:localhost}
-      port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASSWORD:secure_redis_pass}
-      database: 0
-      lettuce:
-        pool:
-          max-active: 32
-          max-idle: 16
-          min-idle: 8
-
 server:
   port: ${SERVER_PORT:8081}
   compression:
     enabled: true
     min-response-size: 2KB
     mime-types: application/json, text/plain
-
-# Кастомный блок для Kafka (под твой текущий Java-код)
-kafka:
-  bootstrapServers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
-  groupId: ${KAFKA_GROUP_ID:jbooking_group}
-  topic:
-    booking-topic: ${KAFKA_ORDER_TOPIC:BOOKING_TOPIC}

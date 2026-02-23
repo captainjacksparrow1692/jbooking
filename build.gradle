@@ -26,8 +26,6 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework:spring-aop'
-	implementation 'org.aspectj:aspectjweaver'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
 	// Mapper

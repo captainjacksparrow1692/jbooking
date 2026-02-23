@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import uzumtech.jbooking.constant.Constant;
 import uzumtech.jbooking.constant.enums.BookingStatus;
 import uzumtech.jbooking.dto.request.BookingCreateRequest;
 import uzumtech.jbooking.dto.response.BookingResponse;
@@ -48,7 +49,7 @@ public class BookingServiceImpl implements BookingService {
                     booking.setRoom(room);
                     booking.setBookingStatus(BookingStatus.HOLD);
                     booking.setCreatedAt(LocalDateTime.now());
-                    booking.setHoldUntil(LocalDateTime.now().plusMinutes(15));
+                    booking.setHoldUntil(LocalDateTime.now().plusMinutes(Constant.DEFAULT_BOOKING_HOLD_MINUTES));
 
                     Booking saved = bookingRepository.save(booking);
 

@@ -35,7 +35,11 @@ public class CityServiceImpl implements CityService {
     public Page<CityResponse> searchCities(CitySearchRequest request, Pageable pageable) {
         log.info("Searching cities by request: {}", request);
 
-        return cityRepository.findByNameContainingIgnoreCase(request.name(), pageable)
+        return cityRepository.searchByNameAndCountry(
+                        request.name(),
+                        request.country(),
+                        pageable
+                )
                 .map(cityMapper::toResponse);
     }
 }

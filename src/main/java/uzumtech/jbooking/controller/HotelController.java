@@ -5,13 +5,13 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uzumtech.jbooking.dto.request.HotelSearchRequest;
 import uzumtech.jbooking.dto.response.HotelSearchResponse;
 import uzumtech.jbooking.service.HotelService;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -22,13 +22,14 @@ public class HotelController {
 
     HotelService hotelService;
 
-    @PostMapping("/search")
-    public ResponseEntity<List<HotelSearchResponse>> search(
-            @Valid @RequestBody HotelSearchRequest request) {
+    @GetMapping("/search")
+    public ResponseEntity<Page<HotelSearchResponse>> search(
+            @Valid HotelSearchRequest request,
+            Pageable pageable) {
 
-        log.info("REST request to search hotels for city: {}", request.cityId());
+        log.info("REST request to search hotels with criteria: {}", request);
 
-        List<HotelSearchResponse> results = hotelService.searchHotel(request);
+        Page<HotelSearchResponse> results = hotelService.searchHotel(request, pageable);
 
         return ResponseEntity.ok(results);
     }

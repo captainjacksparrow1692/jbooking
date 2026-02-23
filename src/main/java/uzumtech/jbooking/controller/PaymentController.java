@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uzumtech.jbooking.constant.Constant;
 import uzumtech.jbooking.dto.request.BankWebhookRequest;
 import uzumtech.jbooking.dto.request.PaymentRequest;
 import uzumtech.jbooking.dto.response.PaymentResponse;
@@ -36,7 +37,7 @@ public class PaymentController {
             @RequestBody @Valid BankWebhookRequest request) {
 
         // Минимальная защита: проверка секретного ключа
-        if (!"YOUR_SECRET_BANK_TOKEN".equals(apiKey)) {
+        if (!Constant.BANK_WEBHOOK_SECRET.equals(apiKey)) {
             return ResponseEntity.status(401).build();
         }
 

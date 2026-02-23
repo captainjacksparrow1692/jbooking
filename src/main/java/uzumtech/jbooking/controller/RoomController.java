@@ -1,5 +1,6 @@
 package uzumtech.jbooking.controller;
 
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -31,7 +32,7 @@ public class RoomController {
     //поиск комнаты
     @PostMapping("/search")
     public ResponseEntity<Page<RoomResponse>> searchRooms(
-            @RequestBody RoomSearchRequest request,
+            @Valid @RequestBody RoomSearchRequest request,
             Pageable pageable) {
         log.info("REST request to search rooms with criteria: {}", request);
         return ResponseEntity.ok(roomService.searchRooms(request, pageable));

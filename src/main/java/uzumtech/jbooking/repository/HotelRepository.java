@@ -1,5 +1,7 @@
 package uzumtech.jbooking.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -7,7 +9,6 @@ import uzumtech.jbooking.constant.enums.AccommodationType;
 import uzumtech.jbooking.entity.Hotel;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
 
@@ -28,11 +29,12 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
                 AND :checkOut > b.checkInDate
           )
         """)
-    List<Hotel> searchAvailableHotels(
+    Page<Hotel> searchAvailableHotels(
             @Param("cityId") Long cityId,
             @Param("checkIn") LocalDate checkIn,
             @Param("checkOut") LocalDate checkOut,
             @Param("minRating") Double minRating,
-            @Param("accommodationType") AccommodationType accommodationType
+            @Param("accommodationType") AccommodationType accommodationType,
+            Pageable pageable
     );
 }
