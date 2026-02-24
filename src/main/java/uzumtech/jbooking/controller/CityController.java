@@ -1,5 +1,6 @@
 package uzumtech.jbooking.controller;
 
+import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -25,9 +26,11 @@ public class CityController {
         return ResponseEntity.ok(cityService.getById(id));
     }
 
-    //api/v1/cities/search?name=Таш
+    //api/v1/cities/search?name=Таш&country=Uzbekistan
     @GetMapping("/search")
-    public ResponseEntity<Page<CityResponse>> search(CitySearchRequest request, Pageable pageable) {
+    public ResponseEntity<Page<CityResponse>> search(
+            @Valid @ModelAttribute CitySearchRequest request,
+            Pageable pageable) {
         return ResponseEntity.ok(cityService.searchCities(request, pageable));
     }
 }

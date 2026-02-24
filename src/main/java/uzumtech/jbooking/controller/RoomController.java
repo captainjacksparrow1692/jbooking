@@ -30,9 +30,9 @@ public class RoomController {
     }
 
     //поиск комнаты
-    @PostMapping("/search")
+    @GetMapping("/search")
     public ResponseEntity<Page<RoomResponse>> searchRooms(
-            @Valid @RequestBody RoomSearchRequest request,
+            @Valid @ModelAttribute RoomSearchRequest request,
             Pageable pageable) {
         log.info("REST request to search rooms with criteria: {}", request);
         return ResponseEntity.ok(roomService.searchRooms(request, pageable));

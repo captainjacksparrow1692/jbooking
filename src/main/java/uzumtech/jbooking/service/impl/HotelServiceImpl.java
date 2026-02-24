@@ -15,7 +15,6 @@ import uzumtech.jbooking.dto.response.HotelSearchResponse;
 import uzumtech.jbooking.exception.BookingValidationException;
 import uzumtech.jbooking.exception.ResourceNotFoundException;
 import uzumtech.jbooking.mapper.HotelMapper;
-import uzumtech.jbooking.repository.CityRepository;
 import uzumtech.jbooking.repository.HotelRepository;
 import uzumtech.jbooking.service.HotelService;
 
@@ -26,14 +25,10 @@ import uzumtech.jbooking.service.HotelService;
 public class HotelServiceImpl implements HotelService {
 
     HotelRepository hotelRepository;
-    CityRepository cityRepository;
     HotelMapper hotelMapper;
 
     @Override
     public Page<HotelSearchResponse> searchHotel(HotelSearchRequest request, Pageable pageable) {
-
-        cityRepository.findById(request.cityId())
-                .orElseThrow(() -> new ResourceNotFoundException("City not found"));
 
         if (request.checkIn() != null && request.checkOut() != null
                 && !request.checkIn().isBefore(request.checkOut())) {
@@ -58,6 +53,7 @@ public class HotelServiceImpl implements HotelService {
                         request.cityId(),
                         request.checkIn(),
                         request.checkOut(),
+                        request.guestsCount(),
                         request.minRating(),
                         request.accommodationType(),
                         safePageable

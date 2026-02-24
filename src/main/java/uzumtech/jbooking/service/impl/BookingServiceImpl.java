@@ -14,9 +14,11 @@ import uzumtech.jbooking.entity.Booking;
 import uzumtech.jbooking.entity.Room;
 import uzumtech.jbooking.exception.ResourceNotFoundException;
 import uzumtech.jbooking.mapper.BookingMapper;
+import uzumtech.jbooking.dto.request.BookingCreateRequest;
 import uzumtech.jbooking.repository.BookingRepository;
 import uzumtech.jbooking.repository.RoomRepository;
 import uzumtech.jbooking.service.BookingService;
+import uzumtech.jbooking.service.KafkaProducerService;
 
 import java.time.LocalDateTime;
 
@@ -29,33 +31,46 @@ public class BookingServiceImpl implements BookingService {
     BookingRepository bookingRepository;
     RoomRepository roomRepository;
     BookingMapper bookingMapper;
+    KafkaProducerService kafkaProducerService;
 
     @Override
     @Transactional
     public BookingResponse create(BookingCreateRequest request) {
-        return roomRepository.findById(request.roomId())
-                .map(room -> {
-                    boolean available = bookingRepository.isRoomAvailable(
-                            room.getId(),
-                            request.checkInDate(),
-                            request.checkOutDate()
-                    );
-
-                    if (!available) {
-                        throw new IllegalStateException("Room is not available for selected dates");
-                    }
-
-                    Booking booking = bookingMapper.toEntity(request);
-                    booking.setRoom(room);
-                    booking.setBookingStatus(BookingStatus.HOLD);
-                    booking.setCreatedAt(LocalDateTime.now());
-                    booking.setHoldUntil(LocalDateTime.now().plusMinutes(Constant.DEFAULT_BOOKING_HOLD_MINUTES));
-
-                    Booking saved = bookingRepository.save(booking);
-
-                    return bookingMapper.toBookingResponse(saved);
-                })
+        Room room = roomRepository.findById(request.roomId())
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found"));
+
+        return createBookingForRoom(request, room);
+    }
+
+    private BookingResponse createBookingForRoom(BookingCreateRequest request, Room room) {
+        boolean available = bookingRepository.isRoomAvailable(
+                room.getId(),
+                request.checkInDate(),
+                request.checkOutDate()
+        );
+        if (!available) {
+            throw new IllegalStateException("Room is not available for selected dates");
+        }
+
+        Booking booking = bookingMapper.toEntity(request);
+        booking.setRoom(room);
+        booking.setBookingStatus(BookingStatus.HOLD);
+        booking.setCreatedAt(LocalDateTime.now());
+        booking.setHoldUntil(LocalDateTime.now().plusMinutes(Constant.DEFAULT_BOOKING_HOLD_MINUTES));
+
+        Booking saved = bookingRepository.save(booking);
+
+        kafkaProducerService.sendBookingCreated(new BookingCreateRequest(
+                saved.getId(),
+                saved.getRoom().getId(),
+                request.userId(),
+                saved.getCheckInDate(),
+                saved.getCheckOutDate(),
+                saved.getGuestsCount(),
+                saved.getCreatedAt()
+        ));
+
+        return bookingMapper.toBookingResponse(saved);
     }
 
     @Override

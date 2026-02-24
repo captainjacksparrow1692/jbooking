@@ -1,8 +1,11 @@
 package uzumtech.jbooking.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import uzumtech.jbooking.constant.Constant;
 import uzumtech.jbooking.dto.request.BankWebhookRequest;
@@ -13,6 +16,7 @@ import uzumtech.jbooking.service.PaymentService;
 @RestController
 @RequestMapping("/api/v1/payments")
 @RequiredArgsConstructor
+@Validated
 public class PaymentController {
 
     private final PaymentService paymentService;
@@ -25,7 +29,7 @@ public class PaymentController {
 
     //возврат денег
     @PostMapping("/refund/{bookingId}")
-    public ResponseEntity<Void> refund(@PathVariable Long bookingId) {
+    public ResponseEntity<Void> refund(@PathVariable @NotNull @Positive Long bookingId) {
         paymentService.refund(bookingId);
         return ResponseEntity.noContent().build();
     }

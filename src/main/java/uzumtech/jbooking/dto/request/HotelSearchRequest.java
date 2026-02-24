@@ -23,6 +23,6 @@ public record HotelSearchRequest(
         Double minRating,
         AccommodationType accommodationType,
 
-        @Positive(message = "Guests count must be positive")
+        @NotNull @Positive(message = "Guests count must be positive")
         Integer guestsCount
 ) {}

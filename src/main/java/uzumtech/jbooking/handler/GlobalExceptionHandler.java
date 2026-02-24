@@ -69,9 +69,9 @@ public class GlobalExceptionHandler {
         log.error("JSON Not Readable: {}", ex.getMessage());
 
         var errorBody = ErrorDto.builder()
-                .code(4001) // Можно взять из вашего Enum Error
+                .code(Error.JSON_NOT_VALID_ERROR_CODE.getCode())
                 .errorType(ErrorType.SYSTEM)
-                .message("Malformed JSON request")
+                .message(Error.JSON_NOT_VALID_ERROR_CODE.getMessage())
                 .build();
 
         return ResponseEntity.badRequest().body(errorBody);
@@ -81,7 +81,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MissingRequestHeaderException.class)
     public ResponseEntity<ErrorDto> handleMissingHeaders(MissingRequestHeaderException ex) {
         var errorBody = ErrorDto.builder()
-                .code(4002)
+                .code(Error.MISSING_REQUEST_HEADER_ERROR_CODE.getCode())
                 .errorType(ErrorType.SYSTEM)
                 .message(ex.getMessage())
                 .build();
@@ -92,7 +92,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErrorDto> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
         var errorBody = ErrorDto.builder()
-                .code(4003)
+                .code(Error.INVALID_REQUEST_PARAM_ERROR_CODE.getCode())
                 .errorType(ErrorType.SYSTEM)
                 .message("Invalid parameter type: " + ex.getName())
                 .build();
@@ -103,7 +103,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<ErrorDto> handleNoHandler(NoHandlerFoundException ex) {
         var errorBody = ErrorDto.builder()
-                .code(4041)
+                .code(Error.HANDLER_NOT_FOUND_ERROR_CODE.getCode())
                 .errorType(ErrorType.SYSTEM)
                 .message("Endpoint not found: " + ex.getRequestURL())
                 .build();
@@ -116,9 +116,9 @@ public class GlobalExceptionHandler {
         log.error("Unexpected Error: ", ex);
 
         var errorBody = ErrorDto.builder()
-                .code(5000)
+                .code(Error.INTERNAL_SERVICE_ERROR_CODE.getCode())
                 .errorType(ErrorType.SYSTEM)
-                .message("An unexpected internal server error occurred")
+                .message(Error.INTERNAL_SERVICE_ERROR_CODE.getMessage())
                 .build();
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorBody);

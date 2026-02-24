@@ -26,7 +26,7 @@ public enum Error {
 
     // --- БИЗНЕС-ЛОГИКА БРОНИРОВАНИЯ (30xxx) ---
     ROOM_ALREADY_BOOKED_ERROR_CODE(30001, "Room is already occupied for these dates"),
-    INVALID_BOOKING_DATES_ERROR_CODE(30002, "Check-in date must be before check-out date"),
+    INVALID_BOOKING_DATES_ERROR_CODE(30002, "Check-in createdAt must be before check-out createdAt"),
     PAST_DATE_BOOKING_ERROR_CODE(30003, "Cannot book a room for past dates"),
     GUEST_COUNT_EXCEEDED_ERROR_CODE(30004, "Guest count exceeds room capacity"),
     BOOKING_ALREADY_CANCELLED_ERROR_CODE(30005, "This booking is already cancelled"),

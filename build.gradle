@@ -50,9 +50,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	runtimeOnly 'org.postgresql:postgresql'
 
-	// Flyway для миграций БД// В блоке dependencies
 	implementation 'org.flywaydb:flyway-core'
-	implementation 'org.flywaydb:flyway-database-postgresql'
+	runtimeOnly 'org.flywaydb:flyway-database-postgresql'
+
+	// Kafka
+	implementation 'org.springframework.kafka:spring-kafka'
 
 	// Testing
 	testImplementation 'com.h2database:h2'

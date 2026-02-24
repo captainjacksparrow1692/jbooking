@@ -23,7 +23,7 @@ public record RoomSearchRequest(
         BoardBasis boardBasis,
         CancellationPolicyType cancellationPolicyType,
 
-        @Positive(message = "Guests count must be positive")
+        @NotNull @Positive(message = "Guests count must be positive")
         Integer guestsCount
 ) {
 

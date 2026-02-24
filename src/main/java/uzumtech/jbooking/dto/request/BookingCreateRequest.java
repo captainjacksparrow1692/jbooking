@@ -4,11 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
-import uzumtech.jbooking.constant.enums.PaymentType;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public record BookingCreateRequest (
+        @NotNull
+        Long  bookingId,
+
         @NotNull(message = "User ID is required")
         Long userId,
 
@@ -27,5 +30,5 @@ public record BookingCreateRequest (
         Integer guestsCount,
 
         @NotNull
-        PaymentType paymentType
+        LocalDateTime createdAt
 ){}

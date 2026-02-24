@@ -24,7 +24,7 @@ public class HotelController {
 
     @GetMapping("/search")
     public ResponseEntity<Page<HotelSearchResponse>> search(
-            @Valid HotelSearchRequest request,
+            @Valid @ModelAttribute HotelSearchRequest request,
             Pageable pageable) {
 
         log.info("REST request to search hotels with criteria: {}", request);

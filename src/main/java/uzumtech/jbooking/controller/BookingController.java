@@ -1,11 +1,14 @@
 package uzumtech.jbooking.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uzumtech.jbooking.dto.request.BookingCreateRequest;
@@ -15,6 +18,7 @@ import uzumtech.jbooking.service.BookingService;
 @Slf4j
 @RestController
 @AllArgsConstructor
+@Validated
 @RequestMapping("/api/v1/bookings")
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class BookingController {
@@ -36,8 +40,8 @@ public class BookingController {
     // получить свою бронь
     @GetMapping("/{bookingId}")
     public ResponseEntity<BookingResponse> getById(
-            @RequestParam Long userId,
-            @PathVariable Long bookingId) {
+            @RequestParam @NotNull @Positive Long userId,
+            @PathVariable @NotNull @Positive Long bookingId) {
 
         log.info("REST request to get booking {} for user {}", bookingId, userId);
 
@@ -49,8 +53,8 @@ public class BookingController {
     // отменить свою бронь
     @DeleteMapping("/{bookingId}/cancel")
     public ResponseEntity<Void> cancelMyBooking(
-            @RequestParam Long userId,
-            @PathVariable Long bookingId) {
+            @RequestParam @NotNull @Positive Long userId,
+            @PathVariable @NotNull @Positive Long bookingId) {
 
         log.info("REST request to cancel booking {} for user {}", bookingId, userId);
 
