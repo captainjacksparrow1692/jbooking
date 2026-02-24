@@ -8,7 +8,7 @@ import uzumtech.jbooking.entity.City;
 @Mapper(componentModel = "spring")
 public interface CityMapper {
 
-    // Из Entity в Response (для клиента/фронтенда)
+    // Из Entity в Response
     @Mapping(target = "cityId", source = "id")
     CityResponse toResponse(City city);
 }

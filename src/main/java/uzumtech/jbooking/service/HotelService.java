@@ -7,6 +7,6 @@ import uzumtech.jbooking.dto.response.HotelSearchResponse;
 
 public interface HotelService {
 
-    // поиск отелей со свободными номерами на даты
+    // поиск отелей
     Page<HotelSearchResponse> searchHotel(HotelSearchRequest request, Pageable pageable);
 }

@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import uzumtech.jbooking.constant.Constant;
 import uzumtech.jbooking.dto.request.CitySearchRequest;
 import uzumtech.jbooking.dto.response.CityResponse;

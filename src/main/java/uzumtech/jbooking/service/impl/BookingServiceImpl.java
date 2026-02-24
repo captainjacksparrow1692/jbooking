@@ -14,7 +14,6 @@ import uzumtech.jbooking.entity.Booking;
 import uzumtech.jbooking.entity.Room;
 import uzumtech.jbooking.exception.ResourceNotFoundException;
 import uzumtech.jbooking.mapper.BookingMapper;
-import uzumtech.jbooking.dto.request.BookingCreateRequest;
 import uzumtech.jbooking.repository.BookingRepository;
 import uzumtech.jbooking.repository.RoomRepository;
 import uzumtech.jbooking.service.BookingService;

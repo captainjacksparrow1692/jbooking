@@ -5,7 +5,7 @@ import uzumtech.jbooking.dto.response.BookingResponse;
 
 public interface BookingService {
 
-    //создание брони и запись в букингхистори
+    //создание брони
     BookingResponse create(BookingCreateRequest request);
 
     //только свою бронь

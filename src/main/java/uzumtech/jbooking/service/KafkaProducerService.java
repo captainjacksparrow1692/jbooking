@@ -10,9 +10,6 @@ import uzumtech.jbooking.dto.request.BookingCreateRequest;
 
 import java.util.concurrent.CompletableFuture;
 
-/**
- * Сервис для публикации событий в Kafka.
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor

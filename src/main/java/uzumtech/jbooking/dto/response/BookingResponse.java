@@ -32,7 +32,7 @@ public record BookingResponse(
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime createdAt,
 
-        // Время, до которого держится бронь (если статус HOLD)
+        // Время, до которого держится бронь
         LocalDateTime holdUntil
 ) {
 }

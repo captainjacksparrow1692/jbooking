@@ -13,7 +13,7 @@ public record HotelSearchResponse(
         String address,
         AccommodationType accommodationType,
         Double averageRating,
-        Integer reviewsCount,
+        Long reviewsCount,
         BigDecimal minPricePerNight,
         String description,
         String brand,
