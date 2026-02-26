@@ -12,8 +12,8 @@ import uzumtech.jbooking.entity.Hotel;
 public interface HotelRepository extends JpaRepository<Hotel, Long> {
 
     @Query("""
-            SELECT h 
-            FROM Hotel h 
+            SELECT h
+            FROM Hotel h
             WHERE h.city.id = :cityId
               AND (:accommodationType IS NULL OR h.accommodationType = :accommodationType)
               AND (:minRating IS NULL OR h.averageRating >= :minRating)

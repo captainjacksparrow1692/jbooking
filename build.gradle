@@ -58,6 +58,9 @@ dependencies {
 
 	// Testing
 	testImplementation 'com.h2database:h2'
+
+	//appconfig(JavaTimeModule)
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 }
 
 tasks.named('test') {
