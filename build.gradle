@@ -41,6 +41,7 @@ dependencies {
 
 	// DevTools
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
 
 	// Core tests
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -58,9 +59,6 @@ dependencies {
 
 	// Testing
 	testImplementation 'com.h2database:h2'
-
-	//appconfig(JavaTimeModule)
-	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 }
 
 tasks.named('test') {
