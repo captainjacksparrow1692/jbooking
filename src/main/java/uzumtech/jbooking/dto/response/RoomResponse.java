@@ -5,9 +5,10 @@ import uzumtech.jbooking.constant.enums.CancellationPolicyType;
 import uzumtech.jbooking.constant.enums.RoomType;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public record RoomResponse(
-        Long id,
+        UUID id,
         String roomNumber,
         RoomType roomType,
         BigDecimal pricePerNight,

@@ -8,11 +8,12 @@ import uzumtech.jbooking.constant.enums.BoardBasis;
 import uzumtech.jbooking.constant.enums.CancellationPolicyType;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public record RoomSearchRequest(
 
         @NotNull(message = "Hotel ID is required")
-        Long hotelId,
+        UUID hotelId,
 
         @NotNull @FutureOrPresent
         LocalDateTime checkIn,

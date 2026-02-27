@@ -3,9 +3,11 @@ package uzumtech.jbooking.dto.request;
 import jakarta.validation.constraints.NotNull;
 import uzumtech.jbooking.constant.enums.AccommodationType;
 
+import java.util.UUID;
+
 public record HotelSearchRequest(
         @NotNull(message = "City ID is required")
-        Long cityId,
+        UUID cityId,
 
         String name,
 

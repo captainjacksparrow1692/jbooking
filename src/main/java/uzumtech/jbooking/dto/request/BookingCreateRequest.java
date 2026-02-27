@@ -7,16 +7,17 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public record BookingCreateRequest (
         @NotNull
-        Long  bookingId,
+        UUID bookingId,
 
         @NotNull(message = "User ID is required")
-        Long userId,
+        UUID userId,
 
         @NotNull(message = "Room ID is required")
-        Long roomId,
+        UUID roomId,
 
         @NotNull @FutureOrPresent
         @JsonProperty("checkInDate")

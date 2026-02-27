@@ -7,14 +7,15 @@ import uzumtech.jbooking.constant.enums.PaymentType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public record BookingResponse(
-        Long bookingId,
+        UUID bookingId,
 
         String hotelName,
         String hotelAddress,
 
-        Long roomId,
+        UUID roomId,
         String roomNumber,
         String roomType,
 

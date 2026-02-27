@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -18,7 +19,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    UUID id;
 
     @Column(unique = true, nullable = false)
     String email;

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @Setter
@@ -16,7 +18,7 @@ public class City {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    UUID id;
 
     String name;
 

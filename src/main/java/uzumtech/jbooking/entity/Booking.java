@@ -8,6 +8,7 @@ import uzumtech.jbooking.constant.enums.BookingStatus;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -20,7 +21,7 @@ public class Booking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id")

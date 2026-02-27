@@ -9,6 +9,7 @@ import uzumtech.jbooking.constant.enums.RoomAvailabilityStatus;
 import uzumtech.jbooking.constant.enums.RoomType;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -22,7 +23,7 @@ public class Room {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    UUID id;
 
     String roomNumber;
     BigDecimal price;

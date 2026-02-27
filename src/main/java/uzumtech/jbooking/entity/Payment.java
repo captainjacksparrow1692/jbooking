@@ -8,6 +8,7 @@ import uzumtech.jbooking.constant.enums.PaymentType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -20,7 +21,7 @@ public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "booking_id")

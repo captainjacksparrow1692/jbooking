@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import uzumtech.jbooking.constant.enums.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -19,7 +20,7 @@ public class Hotel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    UUID id;
 
     String name;
     String address;

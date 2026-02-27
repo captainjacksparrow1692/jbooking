@@ -6,10 +6,11 @@ import uzumtech.jbooking.constant.enums.PaymentStatus;
 import uzumtech.jbooking.constant.enums.PaymentType;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public record PaymentRequest(
         @NotNull(message = "Booking ID cannot be null")
-        Long bookingId,
+        UUID bookingId,
 
         @NotNull(message = "Amount is required")
         @DecimalMin(value = "0.01", message = "Amount must be greater than zero")
