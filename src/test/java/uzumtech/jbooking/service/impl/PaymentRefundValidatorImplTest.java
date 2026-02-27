@@ -16,6 +16,7 @@ import uzumtech.jbooking.repository.BookingRepository;
 import uzumtech.jbooking.repository.PaymentRepository;
 
 import java.util.Optional;
+import java.util.UUID; // Добавлен импорт UUID
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -35,7 +36,8 @@ class PaymentRefundValidatorImplTest {
 
     @Test
     void validateRefundAllowed_shouldPassForRefundableBooking() {
-        Long bookingId = 1L;
+        // Генерируем случайный UUID для бронирования
+        UUID bookingId = UUID.randomUUID();
 
         Room room = Room.builder()
                 .cancellationPolicyType(CancellationPolicyType.FREE_CANCELLATION)
@@ -58,7 +60,7 @@ class PaymentRefundValidatorImplTest {
 
     @Test
     void validateRefundAllowed_shouldThrowForNonRefundableBooking() {
-        Long bookingId = 1L;
+        UUID bookingId = UUID.randomUUID();
 
         Room room = Room.builder()
                 .cancellationPolicyType(CancellationPolicyType.NON_REFUNDABLE)
@@ -77,16 +79,18 @@ class PaymentRefundValidatorImplTest {
 
     @Test
     void validateRefundAllowed_shouldThrowWhenBookingNotFound() {
-        when(bookingRepository.findById(999L)).thenReturn(Optional.empty());
+        UUID randomId = UUID.randomUUID();
 
-        assertThatThrownBy(() -> validator.validateRefundAllowed(999L))
+        when(bookingRepository.findById(randomId)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> validator.validateRefundAllowed(randomId))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Booking not found");
     }
 
     @Test
     void validateRefundAllowed_shouldThrowWhenNoSuccessPayment() {
-        Long bookingId = 1L;
+        UUID bookingId = UUID.randomUUID();
 
         Room room = Room.builder()
                 .cancellationPolicyType(CancellationPolicyType.FREE_CANCELLATION)

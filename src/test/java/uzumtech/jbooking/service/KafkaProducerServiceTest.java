@@ -13,6 +13,7 @@ import uzumtech.jbooking.dto.request.BookingCreateRequest;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,8 +31,13 @@ class KafkaProducerServiceTest {
 
     @Test
     void sendBookingCreated_shouldSendToCorrectTopic() {
+        // Генерируем UUID для теста
+        UUID bookingId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        UUID roomId = UUID.randomUUID();
+
         BookingCreateRequest request = new BookingCreateRequest(
-                100L, 10L, 1L,
+                bookingId, userId, roomId,
                 LocalDate.now().plusDays(1), LocalDate.now().plusDays(3),
                 2, LocalDateTime.now()
         );
@@ -41,7 +47,7 @@ class KafkaProducerServiceTest {
 
         when(kafkaTemplate.send(
                 eq(Constant.TOPIC_BOOKING_CREATED),
-                eq("100"),
+                eq(bookingId.toString()),
                 eq(request)
         )).thenReturn(future);
 
@@ -53,13 +59,17 @@ class KafkaProducerServiceTest {
         verify(kafkaTemplate).send(topicCaptor.capture(), keyCaptor.capture(), eq(request));
 
         assertThat(topicCaptor.getValue()).isEqualTo(Constant.TOPIC_BOOKING_CREATED);
-        assertThat(keyCaptor.getValue()).isEqualTo("100");
+        assertThat(keyCaptor.getValue()).isEqualTo(bookingId.toString());
     }
 
     @Test
     void sendBookingCreated_shouldHandleFailureGracefully() {
+        UUID bookingId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        UUID roomId = UUID.randomUUID();
+
         BookingCreateRequest request = new BookingCreateRequest(
-                200L, 10L, 1L,
+                bookingId, userId, roomId,
                 LocalDate.now().plusDays(1), LocalDate.now().plusDays(3),
                 2, LocalDateTime.now()
         );
@@ -69,7 +79,7 @@ class KafkaProducerServiceTest {
 
         when(kafkaTemplate.send(
                 eq(Constant.TOPIC_BOOKING_CREATED),
-                eq("200"),
+                eq(bookingId.toString()),
                 eq(request)
         )).thenReturn(future);
 
@@ -77,7 +87,7 @@ class KafkaProducerServiceTest {
 
         verify(kafkaTemplate).send(
                 eq(Constant.TOPIC_BOOKING_CREATED),
-                eq("200"),
+                eq(bookingId.toString()),
                 eq(request)
         );
     }

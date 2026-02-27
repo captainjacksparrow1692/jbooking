@@ -19,6 +19,8 @@ import uzumtech.jbooking.mapper.RoomMapper;
 import uzumtech.jbooking.repository.RoomRepository;
 import uzumtech.jbooking.service.RoomService;
 
+import java.util.UUID;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -65,7 +67,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public RoomResponse getById(Long id) {
+    public RoomResponse getById(UUID id) {
         return roomRepository.findById(id)
                 .map(roomMapper::toResponse)
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found"));

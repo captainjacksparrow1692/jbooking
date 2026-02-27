@@ -16,6 +16,8 @@ import uzumtech.jbooking.mapper.CityMapper;
 import uzumtech.jbooking.repository.CityRepository;
 import uzumtech.jbooking.service.CityService;
 
+import java.util.UUID;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -26,7 +28,7 @@ public class CityServiceImpl implements CityService {
     CityMapper cityMapper;
 
     @Override
-    public CityResponse getById(Long id) {
+    public CityResponse getById(UUID id) {
         return cityRepository.findById(id)
                 .map(cityMapper::toResponse)
                 .orElseThrow(() -> new ResourceNotFoundException("City not found"));

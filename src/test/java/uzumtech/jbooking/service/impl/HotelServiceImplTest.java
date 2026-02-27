@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import uzumtech.jbooking.constant.enums.AccommodationType;
 import uzumtech.jbooking.dto.request.HotelSearchRequest;
 import uzumtech.jbooking.dto.response.HotelSearchResponse;
 import uzumtech.jbooking.entity.City;
@@ -18,6 +17,7 @@ import uzumtech.jbooking.mapper.HotelMapper;
 import uzumtech.jbooking.repository.HotelRepository;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,19 +38,33 @@ class HotelServiceImplTest {
 
     @Test
     void searchHotel_shouldReturnPageOfHotels() {
-        HotelSearchRequest request = new HotelSearchRequest(1L, "Grand", 4.0, null);
+        UUID cityId = UUID.randomUUID();
+        UUID hotelId = UUID.randomUUID();
+
+        HotelSearchRequest request = new HotelSearchRequest(cityId, "Grand", 4.0, null);
         Pageable pageable = PageRequest.of(0, 10);
 
-        City city = City.builder().id(1L).name("Tashkent").country("Uzbekistan").build();
-        Hotel hotel = Hotel.builder().id(1L).name("Grand Hotel").city(city).averageRating(4.5).build();
+        City city = City.builder()
+                .id(cityId)
+                .name("Tashkent")
+                .country("Uzbekistan")
+                .build();
+
+        Hotel hotel = Hotel.builder()
+                .id(hotelId)
+                .name("Grand Hotel")
+                .city(city)
+                .averageRating(4.5)
+                .build();
+
         HotelSearchResponse response = new HotelSearchResponse(
-                1L, 1L, "Grand Hotel", "Uzbekistan", "Tashkent", null,
-                null, 4.5, null, null, null, null, null
+                hotelId, cityId, "Grand Hotel", "Uzbekistan", "Tashkent", null,
+                null, 4.5, 100L, null, null, null, null
         );
 
         Page<Hotel> hotelPage = new PageImpl<>(List.of(hotel), pageable, 1);
 
-        when(hotelRepository.simpleSearch(eq(1L), eq(null), eq(4.0), eq("Grand"), any(Pageable.class)))
+        when(hotelRepository.simpleSearch(eq(cityId), eq(null), eq(4.0), eq("Grand"), any(Pageable.class)))
                 .thenReturn(hotelPage);
         when(hotelMapper.toHotelSearchResponse(hotel)).thenReturn(response);
 
@@ -58,14 +72,16 @@ class HotelServiceImplTest {
 
         assertThat(result.getContent()).hasSize(1);
         assertThat(result.getContent().getFirst().name()).isEqualTo("Grand Hotel");
+        assertThat(result.getContent().getFirst().id()).isEqualTo(hotelId);
     }
 
     @Test
     void searchHotel_shouldUseDefaultPageableWhenNull() {
-        HotelSearchRequest request = new HotelSearchRequest(1L, null, null, null);
+        UUID cityId = UUID.randomUUID();
+        HotelSearchRequest request = new HotelSearchRequest(cityId, null, null, null);
         Page<Hotel> emptyPage = Page.empty();
 
-        when(hotelRepository.simpleSearch(eq(1L), eq(null), eq(null), eq(null), any(Pageable.class)))
+        when(hotelRepository.simpleSearch(eq(cityId), eq(null), eq(null), eq(null), any(Pageable.class)))
                 .thenReturn(emptyPage);
 
         Page<HotelSearchResponse> result = hotelService.searchHotel(request, null);
@@ -75,11 +91,12 @@ class HotelServiceImplTest {
 
     @Test
     void searchHotel_shouldCapPageSizeAtMax() {
-        HotelSearchRequest request = new HotelSearchRequest(1L, null, null, null);
+        UUID cityId = UUID.randomUUID();
+        HotelSearchRequest request = new HotelSearchRequest(cityId, null, null, null);
         Pageable oversized = PageRequest.of(0, 500);
         Page<Hotel> emptyPage = Page.empty();
 
-        when(hotelRepository.simpleSearch(eq(1L), eq(null), eq(null), eq(null), any(Pageable.class)))
+        when(hotelRepository.simpleSearch(eq(cityId), eq(null), eq(null), eq(null), any(Pageable.class)))
                 .thenReturn(emptyPage);
 
         Page<HotelSearchResponse> result = hotelService.searchHotel(request, oversized);

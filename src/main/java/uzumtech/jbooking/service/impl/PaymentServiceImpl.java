@@ -18,6 +18,7 @@ import uzumtech.jbooking.repository.PaymentRepository;
 import uzumtech.jbooking.service.PaymentService;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 
 @Service
@@ -58,7 +59,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional
-    public void refund(Long bookingId) {
+    public void refund(UUID bookingId) {
         refundValidator.validateRefundAllowed(bookingId);
 
         Payment payment = paymentRepository.findByBookingIdAndPaymentStatus(bookingId, PaymentStatus.SUCCESS)

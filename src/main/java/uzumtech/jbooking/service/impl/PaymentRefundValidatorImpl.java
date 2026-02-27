@@ -17,6 +17,8 @@ import uzumtech.jbooking.constant.enums.PaymentStatus;
 import org.springframework.http.HttpStatus;
 import uzumtech.jbooking.service.PaymentRefundValidator;
 
+import java.util.UUID;
+
 @Component
 @RequiredArgsConstructor
 public class PaymentRefundValidatorImpl implements PaymentRefundValidator {
@@ -26,7 +28,7 @@ public class PaymentRefundValidatorImpl implements PaymentRefundValidator {
 
     @Override
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-    public void validateRefundAllowed(Long bookingId) {
+    public void validateRefundAllowed(UUID bookingId) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 

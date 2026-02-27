@@ -21,6 +21,7 @@ import uzumtech.jbooking.service.PaymentRefundValidator;
 
 import java.math.BigDecimal;
 import java.util.Optional;
+import java.util.UUID; // Добавлен импорт UUID
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -44,16 +45,17 @@ class PaymentServiceImplTest {
 
     @Test
     void processPayment_shouldSavePaymentAndConfirmBooking() {
+        UUID bookingId = UUID.randomUUID();
         Booking booking = new Booking();
-        booking.setId(1L);
+        booking.setId(bookingId);
         booking.setBookingStatus(BookingStatus.HOLD);
 
         PaymentRequest request = new PaymentRequest(
-                1L, BigDecimal.valueOf(500), PaymentType.PREPAYMENT,
+                bookingId, BigDecimal.valueOf(500), PaymentType.PREPAYMENT,
                 PaymentStatus.SUCCESS, "txn-001"
         );
 
-        when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
+        when(bookingRepository.findById(bookingId)).thenReturn(Optional.of(booking));
         when(paymentRepository.save(any(Payment.class))).thenAnswer(inv -> inv.getArgument(0));
 
         PaymentResponse result = paymentService.processPayment(request);
@@ -68,16 +70,17 @@ class PaymentServiceImplTest {
 
     @Test
     void processPayment_shouldNotConfirmBookingWhenPaymentFailed() {
+        UUID bookingId = UUID.randomUUID();
         Booking booking = new Booking();
-        booking.setId(1L);
+        booking.setId(bookingId);
         booking.setBookingStatus(BookingStatus.HOLD);
 
         PaymentRequest request = new PaymentRequest(
-                1L, BigDecimal.valueOf(500), PaymentType.PREPAYMENT,
+                bookingId, BigDecimal.valueOf(500), PaymentType.PREPAYMENT,
                 PaymentStatus.FAILED, "txn-002"
         );
 
-        when(bookingRepository.findById(1L)).thenReturn(Optional.of(booking));
+        when(bookingRepository.findById(bookingId)).thenReturn(Optional.of(booking));
         when(paymentRepository.save(any(Payment.class))).thenAnswer(inv -> inv.getArgument(0));
 
         PaymentResponse result = paymentService.processPayment(request);
@@ -88,12 +91,13 @@ class PaymentServiceImplTest {
 
     @Test
     void processPayment_shouldThrowWhenBookingNotFound() {
+        UUID randomBookingId = UUID.randomUUID();
         PaymentRequest request = new PaymentRequest(
-                999L, BigDecimal.valueOf(500), PaymentType.PREPAYMENT,
+                randomBookingId, BigDecimal.valueOf(500), PaymentType.PREPAYMENT,
                 PaymentStatus.SUCCESS, "txn-003"
         );
 
-        when(bookingRepository.findById(999L)).thenReturn(Optional.empty());
+        when(bookingRepository.findById(randomBookingId)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> paymentService.processPayment(request))
                 .isInstanceOf(ResourceNotFoundException.class)
@@ -102,7 +106,7 @@ class PaymentServiceImplTest {
 
     @Test
     void refund_shouldSetPaymentRefundedAndBookingCancelled() {
-        Long bookingId = 1L;
+        UUID bookingId = UUID.randomUUID();
 
         Booking booking = new Booking();
         booking.setId(bookingId);
@@ -124,7 +128,7 @@ class PaymentServiceImplTest {
 
     @Test
     void refund_shouldThrowWhenSuccessPaymentNotFound() {
-        Long bookingId = 1L;
+        UUID bookingId = UUID.randomUUID();
 
         doNothing().when(refundValidator).validateRefundAllowed(bookingId);
         when(paymentRepository.findByBookingIdAndPaymentStatus(bookingId, PaymentStatus.SUCCESS))
@@ -137,8 +141,9 @@ class PaymentServiceImplTest {
 
     @Test
     void handleRefundWebhook_shouldRefundOnSuccess() {
+        UUID bookingId = UUID.randomUUID();
         Booking booking = new Booking();
-        booking.setId(1L);
+        booking.setId(bookingId);
         booking.setBookingStatus(BookingStatus.CONFIRMED);
 
         Payment payment = new Payment();
@@ -160,8 +165,9 @@ class PaymentServiceImplTest {
 
     @Test
     void handleRefundWebhook_shouldNotRefundOnFailedStatus() {
+        UUID bookingId = UUID.randomUUID();
         Booking booking = new Booking();
-        booking.setId(1L);
+        booking.setId(bookingId);
         booking.setBookingStatus(BookingStatus.CONFIRMED);
 
         Payment payment = new Payment();

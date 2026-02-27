@@ -17,10 +17,10 @@ import uzumtech.jbooking.repository.BookingRepository;
 import uzumtech.jbooking.repository.RoomRepository;
 import uzumtech.jbooking.service.KafkaProducerService;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -47,12 +47,16 @@ class BookingServiceImplTest {
 
     @Test
     void create_shouldCreateBookingAndSendKafkaEvent() {
-        Long roomId = 1L;
+        // Инициализация UUID
+        UUID roomId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+        UUID bookingId = UUID.randomUUID();
+
         LocalDate checkIn = LocalDate.now().plusDays(1);
         LocalDate checkOut = LocalDate.now().plusDays(3);
 
         BookingCreateRequest request = new BookingCreateRequest(
-                null, 10L, roomId, checkIn, checkOut, 2, null
+                null, userId, roomId, checkIn, checkOut, 2, null
         );
 
         Room room = new Room();
@@ -63,7 +67,7 @@ class BookingServiceImplTest {
 
         Booking mappedEntity = new Booking();
         Booking savedBooking = new Booking();
-        savedBooking.setId(100L);
+        savedBooking.setId(bookingId);
         savedBooking.setRoom(room);
         savedBooking.setCheckInDate(checkIn);
         savedBooking.setCheckOutDate(checkOut);
@@ -72,7 +76,7 @@ class BookingServiceImplTest {
         savedBooking.setCreatedAt(LocalDateTime.now());
 
         BookingResponse expectedResponse = new BookingResponse(
-                100L, "Test Hotel", null, roomId, null, null,
+                bookingId, "Test Hotel", null, roomId, null, null,
                 checkIn, checkOut, null, BookingStatus.HOLD, null,
                 savedBooking.getCreatedAt(), null
         );
@@ -86,19 +90,22 @@ class BookingServiceImplTest {
         BookingResponse result = bookingService.create(request);
 
         assertThat(result).isEqualTo(expectedResponse);
-        assertThat(result.bookingId()).isEqualTo(100L);
+        assertThat(result.bookingId()).isEqualTo(bookingId);
         verify(kafkaProducerService).sendBookingCreated(any(BookingCreateRequest.class));
         verify(bookingRepository).save(any(Booking.class));
     }
 
     @Test
     void create_shouldThrowWhenRoomNotFound() {
+        UUID randomRoomId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
+
         BookingCreateRequest request = new BookingCreateRequest(
-                null, 10L, 999L, LocalDate.now().plusDays(1),
+                null, userId, randomRoomId, LocalDate.now().plusDays(1),
                 LocalDate.now().plusDays(3), 2, null
         );
 
-        when(roomRepository.findById(999L)).thenReturn(Optional.empty());
+        when(roomRepository.findById(randomRoomId)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> bookingService.create(request))
                 .isInstanceOf(ResourceNotFoundException.class)
@@ -107,12 +114,13 @@ class BookingServiceImplTest {
 
     @Test
     void create_shouldThrowWhenRoomNotAvailable() {
-        Long roomId = 1L;
+        UUID roomId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
         LocalDate checkIn = LocalDate.now().plusDays(1);
         LocalDate checkOut = LocalDate.now().plusDays(3);
 
         BookingCreateRequest request = new BookingCreateRequest(
-                null, 10L, roomId, checkIn, checkOut, 2, null
+                null, userId, roomId, checkIn, checkOut, 2, null
         );
 
         Room room = new Room();
@@ -128,14 +136,15 @@ class BookingServiceImplTest {
 
     @Test
     void getById_shouldReturnBookingResponse() {
-        Long userId = 10L;
-        Long bookingId = 100L;
+        UUID userId = UUID.randomUUID();
+        UUID bookingId = UUID.randomUUID();
+        UUID roomId = UUID.randomUUID();
 
         Booking booking = new Booking();
         booking.setId(bookingId);
 
         BookingResponse expectedResponse = new BookingResponse(
-                bookingId, "Hotel", null, 1L, null, null,
+                bookingId, "Hotel", null, roomId, null, null,
                 LocalDate.now(), LocalDate.now().plusDays(2), null,
                 BookingStatus.HOLD, null, LocalDateTime.now(), null
         );
@@ -150,17 +159,20 @@ class BookingServiceImplTest {
 
     @Test
     void getById_shouldThrowWhenBookingNotFound() {
-        when(bookingRepository.findByIdAndUserId(999L, 10L)).thenReturn(Optional.empty());
+        UUID bookingId = UUID.randomUUID();
+        UUID userId = UUID.randomUUID();
 
-        assertThatThrownBy(() -> bookingService.getById(10L, 999L))
+        when(bookingRepository.findByIdAndUserId(bookingId, userId)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> bookingService.getById(userId, bookingId))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Booking not found");
     }
 
     @Test
     void cancelMyBooking_shouldSetStatusCancelled() {
-        Long userId = 10L;
-        Long bookingId = 100L;
+        UUID userId = UUID.randomUUID();
+        UUID bookingId = UUID.randomUUID();
 
         Booking booking = new Booking();
         booking.setId(bookingId);
@@ -175,9 +187,12 @@ class BookingServiceImplTest {
 
     @Test
     void cancelMyBooking_shouldThrowWhenBookingNotFound() {
-        when(bookingRepository.findByIdAndUserId(999L, 10L)).thenReturn(Optional.empty());
+        UUID userId = UUID.randomUUID();
+        UUID bookingId = UUID.randomUUID();
 
-        assertThatThrownBy(() -> bookingService.cancelMyBooking(10L, 999L))
+        when(bookingRepository.findByIdAndUserId(bookingId, userId)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> bookingService.cancelMyBooking(userId, bookingId))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Booking not found");
     }

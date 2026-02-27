@@ -1,6 +1,6 @@
 -- 1. Пользователи (обязательно создаём первыми)
 CREATE TABLE users (
-                       id BIGSERIAL PRIMARY KEY,
+                       id UUID PRIMARY KEY,
                        first_name VARCHAR(255),
                        last_name VARCHAR(255),
                        email VARCHAR(255) UNIQUE NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE users (
 
 -- 2. Города
 CREATE TABLE cities (
-                        id BIGSERIAL PRIMARY KEY,
+                        id UUID PRIMARY KEY,
                         name VARCHAR(255) NOT NULL,
                         country VARCHAR(255),
                         description TEXT,
@@ -19,7 +19,7 @@ CREATE TABLE cities (
 
 -- 3. Отели
 CREATE TABLE hotels (
-                        id BIGSERIAL PRIMARY KEY,
+                        id UUID PRIMARY KEY,
                         name VARCHAR(255) NOT NULL,
                         address VARCHAR(255),
                         description TEXT,
@@ -33,7 +33,7 @@ CREATE TABLE hotels (
 
 -- 4. Комнаты
 CREATE TABLE rooms (
-                       id BIGSERIAL PRIMARY KEY,
+                       id UUID PRIMARY KEY,
                        room_number VARCHAR(50),
                        price DECIMAL(19, 2) NOT NULL,
                        capacity INTEGER,
@@ -46,7 +46,7 @@ CREATE TABLE rooms (
 
 -- 5. Бронирования
 CREATE TABLE bookings (
-                          id BIGSERIAL PRIMARY KEY,
+                          id UUID PRIMARY KEY,
                           room_id BIGINT REFERENCES rooms(id),
                           user_id BIGINT REFERENCES users(id),
                           guests_count INTEGER,
@@ -60,7 +60,7 @@ CREATE TABLE bookings (
 
 -- 6. Платежи
 CREATE TABLE payments (
-                          id BIGSERIAL PRIMARY KEY,
+                          id UUID PRIMARY KEY,
                           booking_id BIGINT UNIQUE REFERENCES bookings(id) ON DELETE CASCADE,
                           amount DECIMAL(19, 2) NOT NULL,
                           transaction_id VARCHAR(255) UNIQUE,

@@ -7,8 +7,9 @@ import uzumtech.jbooking.entity.Booking;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.UUID;
 
-public interface BookingRepository extends JpaRepository<Booking, Long> {
+public interface BookingRepository extends JpaRepository<Booking, UUID> {
 
     // Проверка доступности комнаты
     @Query("""
@@ -26,10 +27,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
           OR b.holdUntil > CURRENT_TIMESTAMP
       )
     """)
-    boolean isRoomAvailable(@Param("roomId") Long roomId,
+    boolean isRoomAvailable(@Param("roomId") UUID roomId,
                             @Param("checkIn") LocalDate checkIn,
                             @Param("checkOut") LocalDate checkOut);
 
     // Найти бронь пользователя
-    Optional<Booking> findByIdAndUserId(Long id, Long userId);
+    Optional<Booking> findByIdAndUserId(UUID id, UUID userId);
 }

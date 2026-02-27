@@ -10,8 +10,9 @@ import uzumtech.jbooking.constant.enums.CancellationPolicyType;
 import uzumtech.jbooking.entity.Room;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
-public interface RoomRepository extends JpaRepository<Room, Long> {
+public interface RoomRepository extends JpaRepository<Room, UUID> {
     @Query("""
         SELECT r
         FROM Room r
@@ -29,7 +30,7 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
           )
         """)
     Page<Room> searchAvailableRooms(
-            @Param("hotelId") Long hotelId,
+            @Param("hotelId") UUID hotelId,
             @Param("checkIn") LocalDate checkIn,
             @Param("checkOut") LocalDate checkOut,
             @Param("guestsCount") Integer guestsCount,

@@ -15,6 +15,8 @@ import uzumtech.jbooking.dto.request.BookingCreateRequest;
 import uzumtech.jbooking.dto.response.BookingResponse;
 import uzumtech.jbooking.service.BookingService;
 
+import java.util.UUID;
+
 @Slf4j
 @RestController
 @AllArgsConstructor
@@ -40,8 +42,8 @@ public class BookingController {
     // получить свою бронь
     @GetMapping("/{bookingId}")
     public ResponseEntity<BookingResponse> getById(
-            @RequestParam @NotNull @Positive Long userId,
-            @PathVariable @NotNull @Positive Long bookingId) {
+            @RequestParam @NotNull @Positive UUID userId,
+            @PathVariable @NotNull @Positive UUID bookingId) {
 
         log.info("REST request to get booking {} for user {}", bookingId, userId);
 
@@ -53,8 +55,8 @@ public class BookingController {
     // отменить свою бронь
     @DeleteMapping("/{bookingId}/cancel")
     public ResponseEntity<Void> cancelMyBooking(
-            @RequestParam @NotNull @Positive Long userId,
-            @PathVariable @NotNull @Positive Long bookingId) {
+            @RequestParam @NotNull @Positive UUID userId,
+            @PathVariable @NotNull @Positive UUID bookingId) {
 
         log.info("REST request to cancel booking {} for user {}", bookingId, userId);
 

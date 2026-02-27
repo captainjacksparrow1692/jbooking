@@ -20,6 +20,7 @@ import uzumtech.jbooking.service.BookingService;
 import uzumtech.jbooking.service.KafkaProducerService;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -73,7 +74,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingResponse getById(Long userId, Long bookingId) {
+    public BookingResponse getById(UUID userId, UUID bookingId) {
         Booking booking = bookingRepository
                 .findByIdAndUserId(bookingId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
@@ -83,7 +84,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public void cancelMyBooking(Long userId, Long bookingId) {
+    public void cancelMyBooking(UUID userId, UUID bookingId) {
         Booking booking = bookingRepository
                 .findByIdAndUserId(bookingId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));

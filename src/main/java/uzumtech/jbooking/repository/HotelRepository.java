@@ -8,8 +8,10 @@ import org.springframework.data.repository.query.Param;
 import uzumtech.jbooking.constant.enums.AccommodationType;
 import uzumtech.jbooking.entity.Hotel;
 
+import java.util.UUID;
 
-public interface HotelRepository extends JpaRepository<Hotel, Long> {
+
+public interface HotelRepository extends JpaRepository<Hotel, UUID> {
 
     @Query("""
             SELECT h
@@ -20,7 +22,7 @@ public interface HotelRepository extends JpaRepository<Hotel, Long> {
               AND (:name IS NULL OR LOWER(h.name) LIKE LOWER(CONCAT('%', :name, '%')))
     """)
     Page<Hotel> simpleSearch(
-            @Param("cityId") Long cityId,
+            @Param("cityId") UUID cityId,
             @Param("accommodationType") AccommodationType accommodationType,
             @Param("minRating") Double minRating,
             @Param("name") String name,

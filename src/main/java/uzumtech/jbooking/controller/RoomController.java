@@ -13,6 +13,8 @@ import uzumtech.jbooking.dto.request.RoomSearchRequest;
 import uzumtech.jbooking.dto.response.RoomResponse;
 import uzumtech.jbooking.service.RoomService;
 
+import java.util.UUID;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +26,7 @@ public class RoomController {
 
     //инфа комнаты что там и как
     @GetMapping("/{id}")
-    public ResponseEntity<RoomResponse> getById(@PathVariable Long id) {
+    public ResponseEntity<RoomResponse> getById(@PathVariable UUID id) {
         log.info("REST request to get room: {}", id);
         return ResponseEntity.ok(roomService.getById(id));
     }

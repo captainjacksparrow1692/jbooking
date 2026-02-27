@@ -18,6 +18,7 @@ import uzumtech.jbooking.repository.CityRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID; // Добавлен импорт UUID
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -39,34 +40,50 @@ class CityServiceImplTest {
 
     @Test
     void getById_shouldReturnCityResponse() {
-        City city = City.builder().id(1L).name("Tashkent").country("Uzbekistan").build();
-        CityResponse expected = new CityResponse(1L, "Tashkent", "Uzbekistan", null);
+        // Создаем UUID для города
+        UUID cityId = UUID.randomUUID();
 
-        when(cityRepository.findById(1L)).thenReturn(Optional.of(city));
+        City city = City.builder()
+                .id(cityId)
+                .name("Tashkent")
+                .country("Uzbekistan")
+                .build();
+
+        CityResponse expected = new CityResponse(cityId, "Tashkent", "Uzbekistan", null);
+
+        when(cityRepository.findById(cityId)).thenReturn(Optional.of(city));
         when(cityMapper.toResponse(city)).thenReturn(expected);
 
-        CityResponse result = cityService.getById(1L);
+        CityResponse result = cityService.getById(cityId);
 
-        assertThat(result.cityId()).isEqualTo(1L);
+        assertThat(result.cityId()).isEqualTo(cityId);
         assertThat(result.name()).isEqualTo("Tashkent");
     }
 
     @Test
     void getById_shouldThrowWhenCityNotFound() {
-        when(cityRepository.findById(999L)).thenReturn(Optional.empty());
+        UUID randomId = UUID.randomUUID();
 
-        assertThatThrownBy(() -> cityService.getById(999L))
+        when(cityRepository.findById(randomId)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> cityService.getById(randomId))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("City not found");
     }
 
     @Test
     void searchCities_shouldReturnPageOfCities() {
+        UUID cityId = UUID.randomUUID();
         CitySearchRequest request = new CitySearchRequest("Tash", null);
         Pageable pageable = PageRequest.of(0, 10);
 
-        City city = City.builder().id(1L).name("Tashkent").country("Uzbekistan").build();
-        CityResponse response = new CityResponse(1L, "Tashkent", "Uzbekistan", null);
+        City city = City.builder()
+                .id(cityId)
+                .name("Tashkent")
+                .country("Uzbekistan")
+                .build();
+
+        CityResponse response = new CityResponse(cityId, "Tashkent", "Uzbekistan", null);
 
         Page<City> cityPage = new PageImpl<>(List.of(city), pageable, 1);
 
@@ -78,6 +95,7 @@ class CityServiceImplTest {
 
         assertThat(result.getContent()).hasSize(1);
         assertThat(result.getContent().getFirst().name()).isEqualTo("Tashkent");
+        assertThat(result.getContent().getFirst().cityId()).isEqualTo(cityId);
     }
 
     @Test

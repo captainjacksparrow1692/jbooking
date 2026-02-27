@@ -9,8 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import uzumtech.jbooking.constant.enums.BoardBasis;
-import uzumtech.jbooking.constant.enums.CancellationPolicyType;
 import uzumtech.jbooking.constant.enums.RoomType;
 import uzumtech.jbooking.dto.request.RoomSearchRequest;
 import uzumtech.jbooking.dto.response.RoomResponse;
@@ -24,6 +22,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID; // Добавлен импорт
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -45,27 +44,35 @@ class RoomServiceImplTest {
 
     @Test
     void searchRooms_shouldReturnPageOfRooms() {
+        // Генерируем UUID для отеля
+        UUID hotelId = UUID.randomUUID();
+        UUID roomId = UUID.randomUUID();
+
         LocalDateTime checkIn = LocalDateTime.now().plusDays(1);
         LocalDateTime checkOut = LocalDateTime.now().plusDays(3);
 
         RoomSearchRequest request = new RoomSearchRequest(
-                1L, checkIn, checkOut, null, null, 2
+                hotelId, checkIn, checkOut, null, null, 2
         );
         Pageable pageable = PageRequest.of(0, 10);
 
         Room room = Room.builder()
-                .id(1L).roomNumber("101").price(BigDecimal.valueOf(100))
-                .capacity(3).roomType(RoomType.STANDARD)
+                .id(roomId) // Теперь UUID
+                .roomNumber("101")
+                .price(BigDecimal.valueOf(100))
+                .capacity(3)
+                .roomType(RoomType.STANDARD)
                 .build();
+
         RoomResponse response = new RoomResponse(
-                1L, "101", RoomType.STANDARD, BigDecimal.valueOf(100),
+                roomId, "101", RoomType.STANDARD, BigDecimal.valueOf(100),
                 3, null, null
         );
 
         Page<Room> roomPage = new PageImpl<>(List.of(room), pageable, 1);
 
         when(roomRepository.searchAvailableRooms(
-                eq(1L), eq(checkIn.toLocalDate()), eq(checkOut.toLocalDate()),
+                eq(hotelId), eq(checkIn.toLocalDate()), eq(checkOut.toLocalDate()),
                 eq(2), eq(null), eq(null), any(Pageable.class)
         )).thenReturn(roomPage);
         when(roomMapper.toResponse(room)).thenReturn(response);
@@ -74,15 +81,17 @@ class RoomServiceImplTest {
 
         assertThat(result.getContent()).hasSize(1);
         assertThat(result.getContent().getFirst().roomNumber()).isEqualTo("101");
+        assertThat(result.getContent().getFirst().id()).isEqualTo(roomId);
     }
 
     @Test
     void searchRooms_shouldThrowWhenCheckInNotBeforeCheckOut() {
+        UUID hotelId = UUID.randomUUID();
         LocalDateTime checkIn = LocalDateTime.now().plusDays(3);
         LocalDateTime checkOut = LocalDateTime.now().plusDays(1);
 
         RoomSearchRequest request = new RoomSearchRequest(
-                1L, checkIn, checkOut, null, null, 2
+                hotelId, checkIn, checkOut, null, null, 2
         );
 
         assertThatThrownBy(() -> roomService.searchRooms(request, PageRequest.of(0, 10)))
@@ -91,10 +100,11 @@ class RoomServiceImplTest {
 
     @Test
     void searchRooms_shouldThrowWhenSameDates() {
+        UUID hotelId = UUID.randomUUID();
         LocalDateTime sameDate = LocalDateTime.now().plusDays(1);
 
         RoomSearchRequest request = new RoomSearchRequest(
-                1L, sameDate, sameDate, null, null, 2
+                hotelId, sameDate, sameDate, null, null, 2
         );
 
         assertThatThrownBy(() -> roomService.searchRooms(request, PageRequest.of(0, 10)))
@@ -103,29 +113,34 @@ class RoomServiceImplTest {
 
     @Test
     void getById_shouldReturnRoomResponse() {
+        UUID roomId = UUID.randomUUID();
         Room room = Room.builder()
-                .id(1L).roomNumber("101").price(BigDecimal.valueOf(100))
-                .capacity(2).roomType(RoomType.STANDARD)
+                .id(roomId)
+                .roomNumber("101")
+                .price(BigDecimal.valueOf(100))
+                .capacity(2)
+                .roomType(RoomType.STANDARD)
                 .build();
         RoomResponse expected = new RoomResponse(
-                1L, "101", RoomType.STANDARD, BigDecimal.valueOf(100),
+                roomId, "101", RoomType.STANDARD, BigDecimal.valueOf(100),
                 2, null, null
         );
 
-        when(roomRepository.findById(1L)).thenReturn(Optional.of(room));
+        when(roomRepository.findById(roomId)).thenReturn(Optional.of(room));
         when(roomMapper.toResponse(room)).thenReturn(expected);
 
-        RoomResponse result = roomService.getById(1L);
+        RoomResponse result = roomService.getById(roomId);
 
-        assertThat(result.id()).isEqualTo(1L);
+        assertThat(result.id()).isEqualTo(roomId);
         assertThat(result.roomNumber()).isEqualTo("101");
     }
 
     @Test
     void getById_shouldThrowWhenRoomNotFound() {
-        when(roomRepository.findById(999L)).thenReturn(Optional.empty());
+        UUID randomId = UUID.randomUUID();
+        when(roomRepository.findById(randomId)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> roomService.getById(999L))
+        assertThatThrownBy(() -> roomService.getById(randomId))
                 .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Room not found");
     }

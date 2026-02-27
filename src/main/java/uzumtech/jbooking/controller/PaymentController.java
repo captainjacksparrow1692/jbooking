@@ -13,6 +13,8 @@ import uzumtech.jbooking.dto.request.PaymentRequest;
 import uzumtech.jbooking.dto.response.PaymentResponse;
 import uzumtech.jbooking.service.PaymentService;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/v1/payments")
 @RequiredArgsConstructor
@@ -29,7 +31,7 @@ public class PaymentController {
 
     //возврат денег
     @PostMapping("/refund/{bookingId}")
-    public ResponseEntity<Void> refund(@PathVariable @NotNull @Positive Long bookingId) {
+    public ResponseEntity<Void> refund(@PathVariable @NotNull @Positive UUID bookingId) {
         paymentService.refund(bookingId);
         return ResponseEntity.noContent().build();
     }

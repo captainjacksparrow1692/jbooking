@@ -5,8 +5,10 @@ import org.springframework.data.domain.Pageable;
 import uzumtech.jbooking.dto.request.CitySearchRequest;
 import uzumtech.jbooking.dto.response.CityResponse;
 
+import java.util.UUID;
+
 public interface CityService {
-    CityResponse getById(Long id);
+    CityResponse getById(UUID id);
 
     // Получение с фильтрацией для пользователя
     Page<CityResponse> searchCities(CitySearchRequest request, Pageable pageable);
