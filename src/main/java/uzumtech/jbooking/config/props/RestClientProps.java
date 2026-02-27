@@ -14,4 +14,7 @@ public class RestClientProps {
 
     long readTimeoutOfMillis;
     long connectionTimeoutOfMillis;
+
+    String jbankUrl;
+    String jnotificationUrl;
 }

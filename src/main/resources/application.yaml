@@ -62,3 +62,10 @@ kafka:
     bookingCreated: ${KAFKA_TOPIC_BOOKING_CREATED:jbooking.bookings.created}
     paymentStatus: ${KAFKA_TOPIC_PAYMENT_STATUS:jbooking.payments.status}
     notifications: ${KAFKA_TOPIC_NOTIFICATIONS:jbooking.internal.notifications}
+
+# REST clients
+rest-client:
+  readTimeoutOfMillis: ${REST_READ_TIMEOUT:5000}
+  connectionTimeoutOfMillis: ${REST_CONNECT_TIMEOUT:5000}
+  jbankUrl: ${JBANK_URL:http://localhost:8082}
+  jnotificationUrl: ${JNOTIFICATION_URL:http://localhost:8083}
