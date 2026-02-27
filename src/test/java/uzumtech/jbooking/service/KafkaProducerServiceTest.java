@@ -31,7 +31,6 @@ class KafkaProducerServiceTest {
 
     @Test
     void sendBookingCreated_shouldSendToCorrectTopic() {
-        // Генерируем UUID для теста
         UUID bookingId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
         UUID roomId = UUID.randomUUID();

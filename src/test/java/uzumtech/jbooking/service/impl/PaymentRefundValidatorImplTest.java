@@ -16,7 +16,7 @@ import uzumtech.jbooking.repository.BookingRepository;
 import uzumtech.jbooking.repository.PaymentRepository;
 
 import java.util.Optional;
-import java.util.UUID; // Добавлен импорт UUID
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -36,7 +36,6 @@ class PaymentRefundValidatorImplTest {
 
     @Test
     void validateRefundAllowed_shouldPassForRefundableBooking() {
-        // Генерируем случайный UUID для бронирования
         UUID bookingId = UUID.randomUUID();
 
         Room room = Room.builder()

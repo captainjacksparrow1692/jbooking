@@ -47,7 +47,6 @@ class BookingServiceImplTest {
 
     @Test
     void create_shouldCreateBookingAndSendKafkaEvent() {
-        // Инициализация UUID
         UUID roomId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
         UUID bookingId = UUID.randomUUID();

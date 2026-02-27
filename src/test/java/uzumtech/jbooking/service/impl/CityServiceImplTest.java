@@ -18,7 +18,7 @@ import uzumtech.jbooking.repository.CityRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID; // Добавлен импорт UUID
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -40,7 +40,6 @@ class CityServiceImplTest {
 
     @Test
     void getById_shouldReturnCityResponse() {
-        // Создаем UUID для города
         UUID cityId = UUID.randomUUID();
 
         City city = City.builder()

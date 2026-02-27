@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID; // Добавлен импорт
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -44,7 +44,6 @@ class RoomServiceImplTest {
 
     @Test
     void searchRooms_shouldReturnPageOfRooms() {
-        // Генерируем UUID для отеля
         UUID hotelId = UUID.randomUUID();
         UUID roomId = UUID.randomUUID();
 
