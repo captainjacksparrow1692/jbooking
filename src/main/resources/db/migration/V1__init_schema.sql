@@ -1,4 +1,4 @@
--- 1. Пользователи (обязательно создаём первыми)
+-- 1. Пользователи
 CREATE TABLE users (
                        id UUID PRIMARY KEY,
                        first_name VARCHAR(255),
@@ -23,7 +23,7 @@ CREATE TABLE hotels (
                         name VARCHAR(255) NOT NULL,
                         address VARCHAR(255),
                         description TEXT,
-                        city_id BIGINT REFERENCES cities(id),
+                        city_id UUID REFERENCES cities(id),
                         accommodation_type VARCHAR(50),
                         brand VARCHAR(50),
                         amenities TEXT,
@@ -37,7 +37,7 @@ CREATE TABLE rooms (
                        room_number VARCHAR(50),
                        price DECIMAL(19, 2) NOT NULL,
                        capacity INTEGER,
-                       hotel_id BIGINT REFERENCES hotels(id) ON DELETE CASCADE,
+                       hotel_id UUID REFERENCES hotels(id) ON DELETE CASCADE,
                        board_basis VARCHAR(50),
                        cancellation_policy_type VARCHAR(50),
                        room_availability_status VARCHAR(50),
@@ -47,8 +47,8 @@ CREATE TABLE rooms (
 -- 5. Бронирования
 CREATE TABLE bookings (
                           id UUID PRIMARY KEY,
-                          room_id BIGINT REFERENCES rooms(id),
-                          user_id BIGINT REFERENCES users(id),
+                          room_id UUID REFERENCES rooms(id),
+                          user_id UUID REFERENCES users(id),
                           guests_count INTEGER,
                           check_in_date DATE NOT NULL,
                           check_out_date DATE NOT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE bookings (
 -- 6. Платежи
 CREATE TABLE payments (
                           id UUID PRIMARY KEY,
-                          booking_id BIGINT UNIQUE REFERENCES bookings(id) ON DELETE CASCADE,
+                          booking_id UUID UNIQUE REFERENCES bookings(id) ON DELETE CASCADE,
                           amount DECIMAL(19, 2) NOT NULL,
                           transaction_id VARCHAR(255) UNIQUE,
                           payment_type VARCHAR(50),

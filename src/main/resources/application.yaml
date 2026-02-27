@@ -41,25 +41,17 @@ spring:
 
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
-    # Параметры как у ментора (Eugene7007/delivery)
-    consumer:
-      group-id: ${KAFKA_GROUP_ID:${spring.application.name}}
-      client-id: ${KAFKA_CLIENT_ID:${spring.application.name}-consumer}
-      auto-offset-reset: ${KAFKA_AUTO_OFFSET_RESET:earliest}
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.trusted.packages: "uzumtech.jbooking.dto.event"
-    producer:
-      acks: ${KAFKA_ACKS:all}
-      retries: ${KAFKA_RETRIES:3}
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-      properties:
-        linger.ms: ${KAFKA_LINGER_MS:100}
-        batch.size: ${KAFKA_BATCH_SIZE:16384}
-        buffer.memory: ${KAFKA_BUFFER_MEMORY:32768}
-        client.dns.lookup: ${KAFKA_CLIENT_DNS_LOOKUP:use_all_dns_ips}
+    group-id: jbooking-group
+    acks-config: all
+    retries-config: 3
+    batch-size-config: 16384
+    linger-ms-config: 100
+    buffer-memory-config: 32768
+    auto-offset-reset-config: earliest
+    topic:
+      booking-created: jbooking.bookings.created
+      payment-status: jbooking.payments.status
+      notifications: jbooking.internal.notifications
 
 server:
   port: ${SERVER_PORT:8081}
