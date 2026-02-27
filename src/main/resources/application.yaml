@@ -39,23 +39,26 @@ spring:
     baseline-on-migrate: false
     clean-disabled: true
 
-  kafka:
-    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
-    group-id: jbooking-group
-    acks-config: all
-    retries-config: 3
-    batch-size-config: 16384
-    linger-ms-config: 100
-    buffer-memory-config: 32768
-    auto-offset-reset-config: earliest
-    topic:
-      booking-created: jbooking.bookings.created
-      payment-status: jbooking.payments.status
-      notifications: jbooking.internal.notifications
-
 server:
   port: ${SERVER_PORT:8081}
   compression:
     enabled: true
     min-response-size: 2KB
     mime-types: application/json, text/plain
+
+# Kafka
+kafka:
+  bootstrapServers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+  groupId: ${KAFKA_GROUP_ID:jbooking-group}
+  clientId: ${KAFKA_CLIENT_ID:jbooking-client}
+  acksConfig: ${KAFKA_ACKS_CONFIG:all}
+  retriesConfig: ${KAFKA_RETRIES_CONFIG:3}
+  batchSizeConfig: ${KAFKA_BATCH_SIZE_CONFIG:16384}
+  lingerMsConfig: ${KAFKA_LINGER_MS_CONFIG:100}
+  bufferMemoryConfig: ${KAFKA_BUFFER_MEMORY_CONFIG:32768}
+  autoOffsetResetConfig: ${KAFKA_AUTO_OFFSET_RESET_CONFIG:earliest}
+  clientDnsLookup: ${KAFKA_CLIENT_DNS_LOOKUP:use_all_dns_ips}
+  topic:
+    bookingCreated: ${KAFKA_TOPIC_BOOKING_CREATED:jbooking.bookings.created}
+    paymentStatus: ${KAFKA_TOPIC_PAYMENT_STATUS:jbooking.payments.status}
+    notifications: ${KAFKA_TOPIC_NOTIFICATIONS:jbooking.internal.notifications}

@@ -1,49 +1,23 @@
 version: '3.8'
 
 services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
   kafka:
-    image: bitnami/kafka:3.8
+    image: confluentinc/cp-kafka:7.5.0
     container_name: kafka
+    depends_on:
+      - zookeeper
     ports:
       - "9092:9092"
     environment:
-      - KAFKA_CFG_NODE_ID=0
-      - KAFKA_CFG_PROCESS_ROLES=controller,broker
-      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
-      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD-SHELL", "kafka-topics.sh --bootstrap-server localhost:9092 --list || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-  db:
-    image: postgres:16-alpine # Используем легкий и актуальный образ PostgreSQL
-    container_name: postgres_db
-
-    # Порт для доступа к базе данных
-    ports:
-      - "5435:5432"
-
-    environment:
-      # --- Обязательные учетные данные и имя БД ---
-      # Замените эти значения на ваши:
-      POSTGRES_DB: jbooking         # Имя базы данных, которая будет создана
-      POSTGRES_USER: sparrow           # Имя суперпользователя
-      POSTGRES_PASSWORD: 9376570167   # Пароль для суперпользователя
-
-      # Отключение ведения журнала (для тестовых сред)
-      # PGDATA: /var/lib/postgresql/data/pgdata
-
-    # Сохранение данных в томе (для постоянства)
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-
-    # Политика перезапуска
-    restart: always
-
-# Объявление внешнего тома для сохранения данных
-volumes:
-  postgres_data:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: true
