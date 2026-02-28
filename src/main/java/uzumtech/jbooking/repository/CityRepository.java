@@ -12,15 +12,6 @@ import java.util.UUID;
 
 public interface CityRepository extends JpaRepository<City, UUID> {
 
-    @Query("""
-        SELECT c
-        FROM City c
-        WHERE (:name IS NULL OR LOWER(c.name) LIKE LOWER(CONCAT('%', :name, '%')))
-          AND (:country IS NULL OR LOWER(c.country) LIKE LOWER(CONCAT('%', :country, '%')))
-        """)
-    Page<City> searchByNameAndCountry(
-            @Param("name") String name,
-            @Param("country") String country,
-            Pageable pageable
-    );
+    @Query("SELECT c FROM City c WHERE LOWER(c.name) LIKE :name")
+    Page<City> findByName(@Param("name") String name, Pageable pageable);
 }

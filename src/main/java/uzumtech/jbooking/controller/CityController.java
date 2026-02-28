@@ -28,7 +28,7 @@ public class CityController {
         return ResponseEntity.ok(cityService.getById(id));
     }
 
-    //api/v1/cities/search?name=Таш&country=Uzbekistan
+    //api/v1/cities/search?name=Tashkent
     @GetMapping("/search")
     public ResponseEntity<Page<CityResponse>> search(
             @Valid @ModelAttribute CitySearchRequest request,

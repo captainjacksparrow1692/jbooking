@@ -8,8 +8,8 @@ import uzumtech.jbooking.dto.response.CityResponse;
 import java.util.UUID;
 
 public interface CityService {
+
     CityResponse getById(UUID id);
 
-    // Получение с фильтрацией для пользователя
     Page<CityResponse> searchCities(CitySearchRequest request, Pageable pageable);
 }

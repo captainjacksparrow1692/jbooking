@@ -36,9 +36,11 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public Page<CityResponse> searchCities(CitySearchRequest request, Pageable pageable) {
+
         log.info("Searching cities by request: {}", request);
 
         Pageable safePageable = pageable;
+
         if (safePageable == null || safePageable.isUnpaged()) {
             safePageable = PageRequest.of(0, Constant.DEFAULT_PAGE_SIZE);
         } else if (safePageable.getPageSize() > Constant.MAX_PAGE_SIZE) {
@@ -49,11 +51,16 @@ public class CityServiceImpl implements CityService {
             );
         }
 
-        return cityRepository.searchByNameAndCountry(
-                        request.name(),
-                        request.country(),
-                        safePageable
-                )
+        String name = request.name();
+
+        if (name == null || name.isBlank()) {
+            name = "%"; // вернёт все города
+        } else {
+            name = "%" + name.toLowerCase() + "%";
+        }
+
+        return cityRepository
+                .findByName(name, safePageable)
                 .map(cityMapper::toResponse);
     }
 }
