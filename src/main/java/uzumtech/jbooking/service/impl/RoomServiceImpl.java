@@ -56,8 +56,8 @@ public class RoomServiceImpl implements RoomService {
 
         return roomRepository.searchAvailableRooms(
                         request.hotelId(),
-                        request.checkIn().toLocalDate(),
-                        request.checkOut().toLocalDate(),
+                        request.checkIn(),
+                        request.checkOut(),
                         request.guestsCount(),
                         request.boardBasis(),
                         request.cancellationPolicyType(),

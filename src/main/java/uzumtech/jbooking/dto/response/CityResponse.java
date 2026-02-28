@@ -6,6 +6,7 @@ public record CityResponse(
         UUID cityId,
         String name,
         String country,
+        String description,
         String timezone
 ) {
 }

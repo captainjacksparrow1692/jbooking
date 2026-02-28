@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Positive;
 import uzumtech.jbooking.constant.enums.BoardBasis;
 import uzumtech.jbooking.constant.enums.CancellationPolicyType;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.UUID;
 
 public record RoomSearchRequest(
@@ -16,10 +16,10 @@ public record RoomSearchRequest(
         UUID hotelId,
 
         @NotNull @FutureOrPresent
-        LocalDateTime checkIn,
+        LocalDate checkIn,
 
         @NotNull @Future
-        LocalDateTime checkOut,
+        LocalDate checkOut,
 
         BoardBasis boardBasis,
         CancellationPolicyType cancellationPolicyType,

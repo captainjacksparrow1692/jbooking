@@ -17,8 +17,8 @@ public interface HotelRepository extends JpaRepository<Hotel, UUID> {
             SELECT h
             FROM Hotel h
             WHERE h.city.id = :cityId
-              AND (:accommodationType IS NULL OR h.accommodationType = :accommodationType)
-              AND (:minRating IS NULL OR h.averageRating >= :minRating)
+              AND (h.accommodationType = :accommodationType)
+              AND (h.averageRating >= :minRating)
               AND (:name IS NULL OR LOWER(h.name) LIKE LOWER(CONCAT('%', :name, '%')))
     """)
     Page<Hotel> simpleSearch(
