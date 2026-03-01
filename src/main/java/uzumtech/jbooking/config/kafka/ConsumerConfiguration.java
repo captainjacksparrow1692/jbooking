@@ -13,6 +13,7 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ContainerProperties;
 import org.springframework.kafka.support.serializer.JacksonJsonDeserializer;
 import uzumtech.jbooking.config.props.KafkaProps;
+import uzumtech.jbooking.dto.BookingCreatedEvent;
 import uzumtech.jbooking.handler.KafkaExceptionHandler;
 
 import java.util.HashMap;
@@ -47,14 +48,13 @@ public class ConsumerConfiguration {
         ConcurrentKafkaListenerContainerFactory<String, T> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory);
         factory.setBatchListener(false);
-        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL_IMMEDIATE);
         factory.setCommonErrorHandler(kafkaErrorHandler);
 
         return factory;
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, Object> kafkaListenerContainerFactory() {
-        return buildContainerFactory(Object.class);
+    public ConcurrentKafkaListenerContainerFactory<String, BookingCreatedEvent> kafkaListenerContainerFactory() {
+        return buildContainerFactory(BookingCreatedEvent.class);
     }
 }

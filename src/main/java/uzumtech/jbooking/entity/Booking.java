@@ -20,7 +20,7 @@ import java.util.UUID;
 public class Booking {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)

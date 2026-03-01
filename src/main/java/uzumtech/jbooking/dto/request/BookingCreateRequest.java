@@ -4,15 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record BookingCreateRequest (
-        @NotNull
-        UUID bookingId,
-
         @NotNull(message = "User ID is required")
         UUID userId,
 
@@ -27,9 +25,6 @@ public record BookingCreateRequest (
         @JsonProperty("checkOutDate")
         LocalDate checkOutDate,
 
-        @NotNull
-        Integer guestsCount,
-
-        @NotNull
-        LocalDateTime createdAt
+        @NotNull @Positive
+        Integer guestsCount
 ){}

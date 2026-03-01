@@ -9,7 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import uzumtech.jbooking.constant.Constant;
-import uzumtech.jbooking.dto.request.BookingCreateRequest;
+import uzumtech.jbooking.dto.BookingCreatedEvent;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -35,7 +35,7 @@ class KafkaProducerServiceTest {
         UUID userId = UUID.randomUUID();
         UUID roomId = UUID.randomUUID();
 
-        BookingCreateRequest request = new BookingCreateRequest(
+        BookingCreatedEvent  request = new BookingCreatedEvent(
                 bookingId, userId, roomId,
                 LocalDate.now().plusDays(1), LocalDate.now().plusDays(3),
                 2, LocalDateTime.now()
@@ -67,7 +67,7 @@ class KafkaProducerServiceTest {
         UUID userId = UUID.randomUUID();
         UUID roomId = UUID.randomUUID();
 
-        BookingCreateRequest request = new BookingCreateRequest(
+        BookingCreatedEvent  request = new BookingCreatedEvent(
                 bookingId, userId, roomId,
                 LocalDate.now().plusDays(1), LocalDate.now().plusDays(3),
                 2, LocalDateTime.now()

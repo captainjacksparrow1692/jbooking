@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uzumtech.jbooking.constant.Constant;
 import uzumtech.jbooking.constant.enums.BookingStatus;
+import uzumtech.jbooking.dto.BookingCreatedEvent;
 import uzumtech.jbooking.dto.request.BookingCreateRequest;
 import uzumtech.jbooking.dto.response.BookingResponse;
 import uzumtech.jbooking.entity.Booking;
@@ -60,7 +61,7 @@ public class BookingServiceImpl implements BookingService {
 
         Booking saved = bookingRepository.save(booking);
 
-        kafkaProducerService.sendBookingCreated(new BookingCreateRequest(
+        kafkaProducerService.sendBookingCreated(new BookingCreatedEvent(
                 saved.getId(),
                 saved.getRoom().getId(),
                 request.userId(),
