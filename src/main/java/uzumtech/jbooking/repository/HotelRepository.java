@@ -10,19 +10,18 @@ import uzumtech.jbooking.entity.Hotel;
 
 import java.util.UUID;
 
-
 public interface HotelRepository extends JpaRepository<Hotel, UUID> {
 
     @Query("""
             SELECT h
             FROM Hotel h
-            WHERE h.city.id = :cityId
-              AND (h.accommodationType = :accommodationType)
-              AND (h.averageRating >= :minRating)
+            WHERE LOWER(h.city.name) = LOWER(:cityName)
+              AND (:accommodationType IS NULL OR h.accommodationType = :accommodationType)
+              AND (:minRating IS NULL OR h.averageRating >= :minRating)
               AND (:name IS NULL OR LOWER(h.name) LIKE LOWER(CONCAT('%', :name, '%')))
     """)
     Page<Hotel> simpleSearch(
-            @Param("cityId") UUID cityId,
+            @Param("cityName") String cityName,
             @Param("accommodationType") AccommodationType accommodationType,
             @Param("minRating") Double minRating,
             @Param("name") String name,

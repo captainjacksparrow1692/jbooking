@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uzumtech.jbooking.component.adapter.JBankAdapter;
 import uzumtech.jbooking.component.adapter.JNotificationAdapter;
 import uzumtech.jbooking.constant.enums.*;
+import uzumtech.jbooking.constant.enums.Error;
 import uzumtech.jbooking.dto.request.BankWebhookRequest;
 import uzumtech.jbooking.dto.request.PaymentRequest;
 import uzumtech.jbooking.dto.response.PaymentResponse;
@@ -84,7 +85,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         if (bankResponse == null) {
             throw new BusinessException(
-                    "REFUND_FAILED",
+                    Error.REFUND_NOT_POSSIBLE_ERROR_CODE.getCode(),
                     "No response from bank",
                     HttpStatus.BAD_GATEWAY,
                     ErrorType.BUSINESS

@@ -26,14 +26,13 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     public Page<HotelSearchResponse> searchHotel(HotelSearchRequest request, Pageable pageable) {
-        log.info("Simple hotel search initiated for cityId: {}", request.cityId());
+        log.info("Hotel search initiated for city: {}", request.cityName());
 
-        // 1. Упрощаем пагинацию (защита от слишком больших запросов)
         Pageable safePageable = getSafePageable(pageable);
 
-        // 2. Вызываем упрощенный метод репозитория
+        // В репозиторий уходит String cityName
         return hotelRepository.simpleSearch(
-                        request.cityId(),
+                        request.cityName(),
                         request.accommodationType(),
                         request.minRating(),
                         request.name(),

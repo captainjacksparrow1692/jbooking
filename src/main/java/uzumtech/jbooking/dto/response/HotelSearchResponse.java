@@ -7,7 +7,6 @@ import java.util.UUID;
 
 public record HotelSearchResponse(
         UUID id,
-        UUID cityId,
         String name,
         String country,
         String city,

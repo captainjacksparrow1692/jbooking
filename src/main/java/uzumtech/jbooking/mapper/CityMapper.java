@@ -9,6 +9,6 @@ import uzumtech.jbooking.entity.City;
 public interface CityMapper {
 
     // Из Entity в Response
-    @Mapping(target = "cityId", source = "id")
+    @Mapping(target = "name", ignore = true)
     CityResponse toResponse(City city);
 }

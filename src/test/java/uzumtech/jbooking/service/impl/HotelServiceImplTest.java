@@ -16,6 +16,7 @@ import uzumtech.jbooking.entity.Hotel;
 import uzumtech.jbooking.mapper.HotelMapper;
 import uzumtech.jbooking.repository.HotelRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,15 +39,16 @@ class HotelServiceImplTest {
 
     @Test
     void searchHotel_shouldReturnPageOfHotels() {
-        UUID cityId = UUID.randomUUID();
+        // Данные для теста
+        String cityName = "Tashkent";
         UUID hotelId = UUID.randomUUID();
 
-        HotelSearchRequest request = new HotelSearchRequest(cityId, "Grand", 4.0, null);
+        // Теперь cityName — это строка
+        HotelSearchRequest request = new HotelSearchRequest(cityName, "Grand", 4.0, null);
         Pageable pageable = PageRequest.of(0, 10);
 
         City city = City.builder()
-                .id(cityId)
-                .name("Tashkent")
+                .name(cityName)
                 .country("Uzbekistan")
                 .build();
 
@@ -58,13 +60,14 @@ class HotelServiceImplTest {
                 .build();
 
         HotelSearchResponse response = new HotelSearchResponse(
-                hotelId, cityId, "Grand Hotel", "Uzbekistan", "Tashkent", null,
-                null, 4.5, 100L, null, null, null, null
+                hotelId, "Grand Hotel", "Uzbekistan", cityName, "Main St 1", null,
+                4.5, 100L, BigDecimal.valueOf(100), "Desc", "Brand", "WiFi"
         );
 
         Page<Hotel> hotelPage = new PageImpl<>(List.of(hotel), pageable, 1);
 
-        when(hotelRepository.simpleSearch(eq(cityId), eq(null), eq(4.0), eq("Grand"), any(Pageable.class)))
+        // Ожидаем в репозитории строку cityName
+        when(hotelRepository.simpleSearch(eq(cityName), eq(null), eq(4.0), eq("Grand"), any(Pageable.class)))
                 .thenReturn(hotelPage);
         when(hotelMapper.toHotelSearchResponse(hotel)).thenReturn(response);
 
@@ -72,16 +75,16 @@ class HotelServiceImplTest {
 
         assertThat(result.getContent()).hasSize(1);
         assertThat(result.getContent().getFirst().name()).isEqualTo("Grand Hotel");
-        assertThat(result.getContent().getFirst().id()).isEqualTo(hotelId);
+        assertThat(result.getContent().getFirst().city()).isEqualTo(cityName);
     }
 
     @Test
     void searchHotel_shouldUseDefaultPageableWhenNull() {
-        UUID cityId = UUID.randomUUID();
-        HotelSearchRequest request = new HotelSearchRequest(cityId, null, null, null);
+        String cityName = "Samarkand";
+        HotelSearchRequest request = new HotelSearchRequest(cityName, null, null, null);
         Page<Hotel> emptyPage = Page.empty();
 
-        when(hotelRepository.simpleSearch(eq(cityId), eq(null), eq(null), eq(null), any(Pageable.class)))
+        when(hotelRepository.simpleSearch(eq(cityName), eq(null), eq(null), eq(null), any(Pageable.class)))
                 .thenReturn(emptyPage);
 
         Page<HotelSearchResponse> result = hotelService.searchHotel(request, null);
@@ -91,12 +94,12 @@ class HotelServiceImplTest {
 
     @Test
     void searchHotel_shouldCapPageSizeAtMax() {
-        UUID cityId = UUID.randomUUID();
-        HotelSearchRequest request = new HotelSearchRequest(cityId, null, null, null);
-        Pageable oversized = PageRequest.of(0, 500);
+        String cityName = "Bukhara";
+        HotelSearchRequest request = new HotelSearchRequest(cityName, null, null, null);
+        Pageable oversized = PageRequest.of(0, 500); // Предположим, MAX_PAGE_SIZE = 100
         Page<Hotel> emptyPage = Page.empty();
 
-        when(hotelRepository.simpleSearch(eq(cityId), eq(null), eq(null), eq(null), any(Pageable.class)))
+        when(hotelRepository.simpleSearch(eq(cityName), eq(null), eq(null), eq(null), any(Pageable.class)))
                 .thenReturn(emptyPage);
 
         Page<HotelSearchResponse> result = hotelService.searchHotel(request, oversized);

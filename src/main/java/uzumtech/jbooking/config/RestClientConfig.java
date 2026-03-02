@@ -2,11 +2,10 @@ package uzumtech.jbooking.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.boot.http.client.ClientHttpRequestFactoryBuilder;
-import org.springframework.boot.http.client.HttpClientSettings;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
 import uzumtech.jbooking.config.props.RestClientProps;
 import uzumtech.jbooking.handler.RestClientExceptionHandler;
@@ -22,12 +21,10 @@ public class RestClientConfig {
 
     @Bean
     public ClientHttpRequestFactory clientHttpRequestFactory() {
-        var settings = HttpClientSettings
-                .defaults()
-                .withReadTimeout(Duration.ofMillis(restClientProps.getReadTimeoutOfMillis()))
-                .withConnectTimeout(Duration.ofMillis(restClientProps.getConnectionTimeoutOfMillis()));
-
-        return ClientHttpRequestFactoryBuilder.jdk().build(settings);
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
+        factory.setReadTimeout(Duration.ofMillis(restClientProps.getReadTimeoutOfMillis()));
+        factory.setConnectTimeout(Duration.ofMillis(restClientProps.getConnectionTimeoutOfMillis()));
+        return factory;
     }
 
     @Bean("jbankClient")

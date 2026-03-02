@@ -8,9 +8,8 @@ import uzumtech.jbooking.entity.Hotel;
 @Mapper(componentModel = "spring")
 public interface HotelMapper {
 
-    @Mapping(target = "cityId", source = "city.id")
-    @Mapping(target = "city", source = "city.name")
-    @Mapping(target = "country", source = "city.country")
+    @Mapping(target = "city", source = "hotel.city.name")
+    @Mapping(target = "country", source = "hotel.city.country")
     @Mapping(target = "minPricePerNight", ignore = true)
     HotelSearchResponse toHotelSearchResponse(Hotel hotel);
 }

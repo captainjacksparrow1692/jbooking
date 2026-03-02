@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 public record BankWebhookRequest (
         @NotNull
-        String transactionId,   // Уникальный ID транзакции во внешней системе
+        String transactionId,
 
         @NotNull
         PaymentStatus paymentStatus,
