@@ -19,7 +19,7 @@ import uzumtech.jbooking.mapper.RoomMapper;
 import uzumtech.jbooking.repository.RoomRepository;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -47,8 +47,8 @@ class RoomServiceImplTest {
         UUID hotelId = UUID.randomUUID();
         UUID roomId = UUID.randomUUID();
 
-        LocalDateTime checkIn = LocalDateTime.now().plusDays(1);
-        LocalDateTime checkOut = LocalDateTime.now().plusDays(3);
+        LocalDate checkIn = LocalDate.now().plusDays(1);
+        LocalDate checkOut = LocalDate.now().plusDays(3);
 
         RoomSearchRequest request = new RoomSearchRequest(
                 hotelId, checkIn, checkOut, null, null, 2
@@ -56,7 +56,7 @@ class RoomServiceImplTest {
         Pageable pageable = PageRequest.of(0, 10);
 
         Room room = Room.builder()
-                .id(roomId) // Теперь UUID
+                .id(roomId)
                 .roomNumber("101")
                 .price(BigDecimal.valueOf(100))
                 .capacity(3)
@@ -71,7 +71,7 @@ class RoomServiceImplTest {
         Page<Room> roomPage = new PageImpl<>(List.of(room), pageable, 1);
 
         when(roomRepository.searchRooms(
-                eq(hotelId), eq(checkIn.toLocalDate()), eq(checkOut.toLocalDate()),
+                eq(hotelId), eq(checkIn), eq(checkOut),
                 eq(2), eq(null), eq(null), any(Pageable.class)
         )).thenReturn(roomPage);
         when(roomMapper.toResponse(room)).thenReturn(response);
@@ -86,8 +86,8 @@ class RoomServiceImplTest {
     @Test
     void searchRooms_shouldThrowWhenCheckInNotBeforeCheckOut() {
         UUID hotelId = UUID.randomUUID();
-        LocalDateTime checkIn = LocalDateTime.now().plusDays(3);
-        LocalDateTime checkOut = LocalDateTime.now().plusDays(1);
+        LocalDate checkIn = LocalDate.now().plusDays(3);
+        LocalDate checkOut = LocalDate.now().plusDays(1);
 
         RoomSearchRequest request = new RoomSearchRequest(
                 hotelId, checkIn, checkOut, null, null, 2
@@ -100,7 +100,7 @@ class RoomServiceImplTest {
     @Test
     void searchRooms_shouldThrowWhenSameDates() {
         UUID hotelId = UUID.randomUUID();
-        LocalDateTime sameDate = LocalDateTime.now().plusDays(1);
+        LocalDate sameDate = LocalDate.now().plusDays(1);
 
         RoomSearchRequest request = new RoomSearchRequest(
                 hotelId, sameDate, sameDate, null, null, 2
