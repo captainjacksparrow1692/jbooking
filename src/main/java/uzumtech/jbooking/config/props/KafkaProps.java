@@ -33,13 +33,13 @@ public class KafkaProps {
     @FieldDefaults(level = AccessLevel.PRIVATE)
     public static class Topic {
 
-        // Топик для новых бронирований (использовали в тестах)
+        // Топик для новых бронирований
         String bookingCreated;
 
         // Топик для статусов оплаты
         String paymentStatus;
 
-        // Топик для уведомлений (Email/SMS)
+        // Топик для уведомлений
         String notifications;
     }
 

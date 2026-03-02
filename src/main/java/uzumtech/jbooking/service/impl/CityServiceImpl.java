@@ -11,12 +11,10 @@ import org.springframework.stereotype.Service;
 import uzumtech.jbooking.constant.Constant;
 import uzumtech.jbooking.dto.request.CitySearchRequest;
 import uzumtech.jbooking.dto.response.CityResponse;
-import uzumtech.jbooking.exception.ResourceNotFoundException;
 import uzumtech.jbooking.mapper.CityMapper;
 import uzumtech.jbooking.repository.CityRepository;
 import uzumtech.jbooking.service.CityService;
 
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -26,13 +24,6 @@ public class CityServiceImpl implements CityService {
 
     CityRepository cityRepository;
     CityMapper cityMapper;
-
-    @Override
-    public CityResponse getById(UUID id) {
-        return cityRepository.findById(id)
-                .map(cityMapper::toResponse)
-                .orElseThrow(() -> new ResourceNotFoundException("City not found"));
-    }
 
     @Override
     public Page<CityResponse> searchCities(CitySearchRequest request, Pageable pageable) {

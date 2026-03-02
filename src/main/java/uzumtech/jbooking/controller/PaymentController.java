@@ -23,31 +23,31 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
-    //процесс оплаты и тд
+    // Инициируем оплату → jbooking холдирует в банке → ответ PENDING
+    // Финальный статус придёт через webhook
     @PostMapping("/process")
     public ResponseEntity<PaymentResponse> process(@RequestBody @Valid PaymentRequest request) {
         return ResponseEntity.ok(paymentService.processPayment(request));
     }
 
-    //возврат денег
+    // Инициируем возврат → банк обрабатывает → подтверждение через webhook
     @PostMapping("/refund/{bookingId}")
     public ResponseEntity<Void> refund(@PathVariable @NotNull @Positive UUID bookingId) {
         paymentService.refund(bookingId);
         return ResponseEntity.noContent().build();
     }
 
-    //вебхук от банка
+    // Единый webhook от банка — обрабатывает и оплату и возврат
     @PostMapping("/webhook/bank")
     public ResponseEntity<Void> handleWebhook(
             @RequestHeader(value = "X-Api-Key", required = false) String apiKey,
             @RequestBody @Valid BankWebhookRequest request) {
 
-        // Минимальная защита: проверка секретного ключа
         if (!Constant.BANK_WEBHOOK_SECRET.equals(apiKey)) {
             return ResponseEntity.status(401).build();
         }
 
-        paymentService.handleRefundWebhook(request);
+        paymentService.handleBankWebhook(request);
         return ResponseEntity.ok().build();
     }
 }

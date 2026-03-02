@@ -54,7 +54,7 @@ public class RoomServiceImpl implements RoomService {
             );
         }
 
-        return roomRepository.searchAvailableRooms(
+        return roomRepository.searchRooms(
                         request.hotelId(),
                         request.checkIn(),
                         request.checkOut(),

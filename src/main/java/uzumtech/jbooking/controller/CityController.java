@@ -12,8 +12,6 @@ import uzumtech.jbooking.dto.request.CitySearchRequest;
 import uzumtech.jbooking.dto.response.CityResponse;
 import uzumtech.jbooking.service.CityService;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping("/api/v1/cities")
 @RequiredArgsConstructor
@@ -21,12 +19,6 @@ import java.util.UUID;
 public class CityController {
 
     CityService cityService;
-
-    // Получить конкретный город (например, для страницы описания города)
-    @GetMapping("/{id}")
-    public ResponseEntity<CityResponse> getById(@PathVariable UUID id) {
-        return ResponseEntity.ok(cityService.getById(id));
-    }
 
     //api/v1/cities/search?name=Tashkent
     @GetMapping("/search")

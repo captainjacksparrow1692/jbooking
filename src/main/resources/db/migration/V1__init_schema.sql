@@ -60,12 +60,12 @@ CREATE TABLE bookings (
 
 -- 6. Платежи
 CREATE TABLE payments (
-                          id UUID PRIMARY KEY,
-                          booking_id UUID UNIQUE REFERENCES bookings(id) ON DELETE CASCADE,
-                          amount DECIMAL(19, 2) NOT NULL,
-                          transaction_id VARCHAR(255) UNIQUE,
-                          payment_type VARCHAR(50),
-                          payment_status VARCHAR(50),
-                          payment_date TIMESTAMP,
-                          provider VARCHAR(100)
+                          id              UUID PRIMARY KEY,
+                          booking_id      UUID NOT NULL REFERENCES bookings(id) ON DELETE CASCADE,
+                          amount          DECIMAL(19, 2) NOT NULL,
+                          transaction_id  VARCHAR(255) UNIQUE,
+                          payment_type    VARCHAR(50),
+                          payment_status  VARCHAR(50) NOT NULL DEFAULT 'PENDING',
+                          payment_date    TIMESTAMP,
+                          provider        VARCHAR(100)
 );

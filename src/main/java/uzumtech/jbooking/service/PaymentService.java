@@ -1,6 +1,5 @@
 package uzumtech.jbooking.service;
 
-import uzumtech.jbooking.constant.enums.PaymentStatus;
 import uzumtech.jbooking.dto.request.BankWebhookRequest;
 import uzumtech.jbooking.dto.request.PaymentRequest;
 import uzumtech.jbooking.dto.response.PaymentResponse;
@@ -9,12 +8,9 @@ import java.util.UUID;
 
 public interface PaymentService {
 
-    // Обработка транзакции
     PaymentResponse processPayment(PaymentRequest request);
 
-    // Возврат средств при отмене
     void refund(UUID bookingId);
 
-    //метод обработки
-    void handleRefundWebhook(BankWebhookRequest request);
+    void handleBankWebhook(BankWebhookRequest request);
 }

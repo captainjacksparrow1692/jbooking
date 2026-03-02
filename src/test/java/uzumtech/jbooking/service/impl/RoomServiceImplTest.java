@@ -70,7 +70,7 @@ class RoomServiceImplTest {
 
         Page<Room> roomPage = new PageImpl<>(List.of(room), pageable, 1);
 
-        when(roomRepository.searchAvailableRooms(
+        when(roomRepository.searchRooms(
                 eq(hotelId), eq(checkIn.toLocalDate()), eq(checkOut.toLocalDate()),
                 eq(2), eq(null), eq(null), any(Pageable.class)
         )).thenReturn(roomPage);

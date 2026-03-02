@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uzumtech.jbooking.constant.enums.BookingStatus;
+import uzumtech.jbooking.dto.BookingCreatedEvent;
 import uzumtech.jbooking.dto.request.BookingCreateRequest;
 import uzumtech.jbooking.dto.response.BookingResponse;
 import uzumtech.jbooking.entity.Booking;
@@ -24,7 +25,8 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -54,17 +56,20 @@ class BookingServiceImplTest {
         LocalDate checkIn = LocalDate.now().plusDays(1);
         LocalDate checkOut = LocalDate.now().plusDays(3);
 
+        // BookingCreateRequest: userId, roomId, checkInDate, checkOutDate, guestsCount
         BookingCreateRequest request = new BookingCreateRequest(
-                null, userId, roomId, checkIn, checkOut, 2, null
+                userId, roomId, checkIn, checkOut, 2
         );
+
+        Hotel hotel = new Hotel();
+        hotel.setName("Test Hotel");
 
         Room room = new Room();
         room.setId(roomId);
-        Hotel hotel = new Hotel();
-        hotel.setName("Test Hotel");
         room.setHotel(hotel);
 
         Booking mappedEntity = new Booking();
+
         Booking savedBooking = new Booking();
         savedBooking.setId(bookingId);
         savedBooking.setRoom(room);
@@ -74,6 +79,9 @@ class BookingServiceImplTest {
         savedBooking.setBookingStatus(BookingStatus.HOLD);
         savedBooking.setCreatedAt(LocalDateTime.now());
 
+        // BookingResponse: bookingId, hotelName, hotelAddress, roomId, roomNumber,
+        //                  roomType, checkIn, checkOut, totalPrice, bookingStatus,
+        //                  paymentType, createdAt, holdUntil
         BookingResponse expectedResponse = new BookingResponse(
                 bookingId, "Test Hotel", null, roomId, null, null,
                 checkIn, checkOut, null, BookingStatus.HOLD, null,
@@ -90,21 +98,22 @@ class BookingServiceImplTest {
 
         assertThat(result).isEqualTo(expectedResponse);
         assertThat(result.bookingId()).isEqualTo(bookingId);
-        verify(kafkaProducerService).sendBookingCreated(any(BookingCreateRequest.class));
+
+        // sendBookingCreated принимает BookingCreatedEvent, не BookingCreateRequest
+        verify(kafkaProducerService).sendBookingCreated(any(BookingCreatedEvent.class));
         verify(bookingRepository).save(any(Booking.class));
     }
 
     @Test
     void create_shouldThrowWhenRoomNotFound() {
-        UUID randomRoomId = UUID.randomUUID();
+        UUID roomId = UUID.randomUUID();
         UUID userId = UUID.randomUUID();
 
         BookingCreateRequest request = new BookingCreateRequest(
-                null, userId, randomRoomId, LocalDate.now().plusDays(1),
-                LocalDate.now().plusDays(3), 2, null
+                userId, roomId, LocalDate.now().plusDays(1), LocalDate.now().plusDays(3), 2
         );
 
-        when(roomRepository.findById(randomRoomId)).thenReturn(Optional.empty());
+        when(roomRepository.findById(roomId)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> bookingService.create(request))
                 .isInstanceOf(ResourceNotFoundException.class)
@@ -119,7 +128,7 @@ class BookingServiceImplTest {
         LocalDate checkOut = LocalDate.now().plusDays(3);
 
         BookingCreateRequest request = new BookingCreateRequest(
-                null, userId, roomId, checkIn, checkOut, 2, null
+                userId, roomId, checkIn, checkOut, 2
         );
 
         Room room = new Room();

@@ -29,7 +29,7 @@ public interface RoomRepository extends JpaRepository<Room, UUID> {
                 AND :checkOut > b.checkInDate
           )
         """)
-    Page<Room> searchAvailableRooms(
+    Page<Room> searchRooms(
             @Param("hotelId") UUID hotelId,
             @Param("checkIn") LocalDate checkIn,
             @Param("checkOut") LocalDate checkOut,
