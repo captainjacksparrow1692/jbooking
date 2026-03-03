@@ -22,6 +22,6 @@ public record PaymentRequest(
         @NotNull(message = "Payment status is required")
         PaymentStatus paymentStatus, // PENDING, SUCCESS, FAILED
 
-        String transactionId // ID от платежного шлюза
+        String transactionId
 ) {
 }

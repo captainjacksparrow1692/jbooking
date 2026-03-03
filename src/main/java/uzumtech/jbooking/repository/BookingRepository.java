@@ -16,16 +16,15 @@ public interface BookingRepository extends JpaRepository<Booking, UUID> {
     SELECT CASE WHEN COUNT(b) = 0 THEN true ELSE false END
     FROM Booking b
     WHERE b.room.id = :roomId
-      AND b.bookingStatus <> uzumtech.jbooking.constant.enums.BookingStatus.CANCELLED
-      AND (
-          :checkIn < b.checkOutDate AND
-          :checkOut > b.checkInDate
+      AND b.bookingStatus NOT IN (
+          uzumtech.jbooking.constant.enums.BookingStatus.CANCELLED
       )
-      AND (
-          b.bookingStatus <> uzumtech.jbooking.constant.enums.BookingStatus.HOLD
-          OR b.holdUntil IS NULL
-          OR b.holdUntil > CURRENT_TIMESTAMP
+      AND NOT (
+          b.bookingStatus = uzumtech.jbooking.constant.enums.BookingStatus.HOLD
+          AND b.holdUntil IS NOT NULL
+          AND b.holdUntil <= CURRENT_TIMESTAMP
       )
+      AND (:checkIn < b.checkOutDate AND :checkOut > b.checkInDate)
     """)
     boolean isRoomAvailable(@Param("roomId") UUID roomId,
                             @Param("checkIn") LocalDate checkIn,

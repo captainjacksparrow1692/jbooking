@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uzumtech.jbooking.constant.Constant;
 import uzumtech.jbooking.dto.request.HotelSearchRequest;
 import uzumtech.jbooking.dto.response.HotelSearchResponse;
@@ -18,6 +19,7 @@ import uzumtech.jbooking.service.HotelService;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class HotelServiceImpl implements HotelService {
 
@@ -30,7 +32,6 @@ public class HotelServiceImpl implements HotelService {
 
         Pageable safePageable = getSafePageable(pageable);
 
-        // В репозиторий уходит String cityName
         return hotelRepository.simpleSearch(
                         request.cityName(),
                         request.accommodationType(),

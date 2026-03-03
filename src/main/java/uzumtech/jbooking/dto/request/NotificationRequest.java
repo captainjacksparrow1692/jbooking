@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public record NotificationRequest(
         UUID userId,
-        NotificationType type,  // EMAIL, SMS
+        NotificationType type,  // EMAIL
         String subject,
         String message
 ) {

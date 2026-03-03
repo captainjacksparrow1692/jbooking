@@ -43,7 +43,6 @@ class HotelServiceImplTest {
         String cityName = "Tashkent";
         UUID hotelId = UUID.randomUUID();
 
-        // Теперь cityName — это строка
         HotelSearchRequest request = new HotelSearchRequest(cityName, "Grand", 4.0, null);
         Pageable pageable = PageRequest.of(0, 10);
 
@@ -66,7 +65,6 @@ class HotelServiceImplTest {
 
         Page<Hotel> hotelPage = new PageImpl<>(List.of(hotel), pageable, 1);
 
-        // Ожидаем в репозитории строку cityName
         when(hotelRepository.simpleSearch(eq(cityName), eq(null), eq(4.0), eq("Grand"), any(Pageable.class)))
                 .thenReturn(hotelPage);
         when(hotelMapper.toHotelSearchResponse(hotel)).thenReturn(response);

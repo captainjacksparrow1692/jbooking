@@ -11,6 +11,7 @@ import java.util.UUID;
 
 public record BookingResponse(
         UUID bookingId,
+        UUID userId,
 
         String hotelName,
         String hotelAddress,
@@ -30,10 +31,9 @@ public record BookingResponse(
         BookingStatus bookingStatus,
         PaymentType paymentType,
 
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        LocalDateTime createdAt,
+        Integer guestsCount,
 
-        // Время, до которого держится бронь
-        LocalDateTime holdUntil
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        LocalDateTime createdAt
 ) {
 }

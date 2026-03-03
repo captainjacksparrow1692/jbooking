@@ -40,7 +40,23 @@ public class BookingServiceImpl implements BookingService {
         Room room = roomRepository.findById(request.roomId())
                 .orElseThrow(() -> new ResourceNotFoundException("Room not found"));
 
-        return createBookingForRoom(request, room);
+        BookingResponse response = createBookingForRoom(request, room);
+
+        try {
+            kafkaProducerService.sendBookingCreated(new BookingCreatedEvent(
+                    response.bookingId(),
+                    room.getId(),
+                    request.userId(),
+                    response.checkIn(),
+                    response.checkOut(),
+                    response.guestsCount(),
+                    response.createdAt()
+            ));
+        } catch (Exception e) {
+            log.error("Failed to send Kafka event for booking {}: {}", response.bookingId(), e.getMessage());
+        }
+
+        return response;
     }
 
     private BookingResponse createBookingForRoom(BookingCreateRequest request, Room room) {
@@ -60,17 +76,6 @@ public class BookingServiceImpl implements BookingService {
         booking.setHoldUntil(LocalDateTime.now().plusMinutes(Constant.DEFAULT_BOOKING_HOLD_MINUTES));
 
         Booking saved = bookingRepository.save(booking);
-
-        kafkaProducerService.sendBookingCreated(new BookingCreatedEvent(
-                saved.getId(),
-                saved.getRoom().getId(),
-                request.userId(),
-                saved.getCheckInDate(),
-                saved.getCheckOutDate(),
-                saved.getGuestsCount(),
-                saved.getCreatedAt()
-        ));
-
         return bookingMapper.toBookingResponse(saved);
     }
 

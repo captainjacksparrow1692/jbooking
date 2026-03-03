@@ -41,21 +41,18 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public PaymentResponse processPayment(PaymentRequest request) {
-        // 1. Находим бронирование
+
         Booking booking = bookingRepository.findById(request.bookingId())
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
-        // 2. Отправляем hold в банк — только инициируем оплату
         log.info("Sending hold payment request to jBank, bookingId={}", request.bookingId());
         PaymentResponse bankResponse = jBankAdapter.holdPayment(request);
 
-        // 3. Сохраняем платёж со статусом PENDING
-        // Финальный статус придёт асинхронно через webhook от банка
         Payment payment = new Payment();
         payment.setBooking(booking);
         payment.setAmount(request.amount());
         payment.setPaymentStatus(PaymentStatus.PENDING);
-        payment.setTransactionId(bankResponse.transactionId()); // ID от банка
+        payment.setTransactionId(bankResponse.transactionId());
         payment.setPaymentDate(LocalDateTime.now());
         payment.setPaymentType(request.paymentType());
         paymentRepository.save(payment);
@@ -133,7 +130,6 @@ public class PaymentServiceImpl implements PaymentService {
 
         } else {
             // Банк отказал
-
             if (PaymentStatus.PENDING.equals(payment.getPaymentStatus())) {
                 // Оплата не прошла — букинг остаётся HOLD
                 payment.setPaymentStatus(PaymentStatus.FAILED);
