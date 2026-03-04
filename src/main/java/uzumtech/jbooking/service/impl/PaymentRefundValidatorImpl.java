@@ -27,7 +27,7 @@ public class PaymentRefundValidatorImpl implements PaymentRefundValidator {
     private final PaymentRepository paymentRepository;
 
     @Override
-    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public void validateRefundAllowed(UUID bookingId) {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));

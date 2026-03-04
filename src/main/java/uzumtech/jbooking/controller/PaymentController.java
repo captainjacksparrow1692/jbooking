@@ -32,7 +32,7 @@ public class PaymentController {
 
     // инициируем возврат → банк обрабатывает → подтверждение через webhook
     @PostMapping("/refund/{bookingId}")
-    public ResponseEntity<Void> refund(@PathVariable @NotNull @Positive UUID bookingId) {
+    public ResponseEntity<Void> refund(@PathVariable @NotNull UUID bookingId) {
         paymentService.refund(bookingId);
         return ResponseEntity.noContent().build();
     }

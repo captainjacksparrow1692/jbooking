@@ -32,6 +32,7 @@ public enum Error {
     BOOKING_ALREADY_CANCELLED_ERROR_CODE(30005, "This booking is already cancelled"),
     BOOKING_HOLD_EXPIRED_ERROR_CODE(30006, "Booking hold time has expired"),
     CANCELLATION_NOT_ALLOWED_ERROR_CODE(30007, "Cancellation is not allowed according to the hotel policy"),
+    INVALID_BOOKING_STATUS_ERROR_CODE(30008, "Booking status does not allow this operation"),
 
     // --- ОШИБКИ ОПЛАТЫ (40xxx) ---
     PAYMENT_AMOUNT_MISMATCH_ERROR_CODE(40001, "Paid amount does not match booking price"),

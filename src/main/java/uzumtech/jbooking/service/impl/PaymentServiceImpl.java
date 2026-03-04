@@ -45,6 +45,15 @@ public class PaymentServiceImpl implements PaymentService {
         Booking booking = bookingRepository.findById(request.bookingId())
                 .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 
+        if (!BookingStatus.HOLD.equals(booking.getBookingStatus())) {
+            throw new BusinessException(
+                    Error.INVALID_BOOKING_STATUS_ERROR_CODE.getCode(),
+                    "Booking is not in HOLD status",
+                    HttpStatus.CONFLICT,
+                    ErrorType.BUSINESS
+            );
+        }
+
         log.info("Sending hold payment request to jBank, bookingId={}", request.bookingId());
         PaymentResponse bankResponse = jBankAdapter.holdPayment(request);
 

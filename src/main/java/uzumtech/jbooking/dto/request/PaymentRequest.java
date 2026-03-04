@@ -19,9 +19,6 @@ public record PaymentRequest(
         @NotNull(message = "Payment type is required")
         PaymentType paymentType, // PREPAYMENT, PARTIAL, PAY_AT_HOTEL
 
-        @NotNull(message = "Payment status is required")
-        PaymentStatus paymentStatus, // PENDING, SUCCESS, FAILED
-
         String transactionId
 ) {
 }

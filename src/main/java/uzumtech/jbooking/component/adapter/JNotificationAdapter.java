@@ -34,11 +34,18 @@ public class JNotificationAdapter {
     private void send(NotificationRequest request) {
         log.info("Sending {} notification to userId={}", request.type(), request.userId());
 
-        restClient
-                .post()
-                .uri("/api/v1/notifications/send")
-                .body(request)
-                .retrieve()
-                .toBodilessEntity();
+        try {
+            restClient
+                    .post()
+                    .uri("/api/v1/notifications/send")
+                    .body(request)
+                    .retrieve()
+                    .toBodilessEntity();
+
+            log.info("Notification sent successfully to userId={}", request.userId());
+        } catch (Exception e) {
+            log.error("Failed to send {} notification to userId={}: {}",
+                    request.type(), request.userId(), e.getMessage());
+        }
     }
 }

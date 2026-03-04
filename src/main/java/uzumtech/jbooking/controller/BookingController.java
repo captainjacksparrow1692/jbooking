@@ -2,7 +2,6 @@ package uzumtech.jbooking.controller;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -42,8 +41,8 @@ public class BookingController {
     // получить свою бронь
     @GetMapping("/{bookingId}")
     public ResponseEntity<BookingResponse> getById(
-            @RequestParam @NotNull @Positive UUID userId,
-            @PathVariable @NotNull @Positive UUID bookingId) {
+            @RequestParam @NotNull UUID userId,
+            @PathVariable @NotNull UUID bookingId) {
 
         log.info("REST request to get booking {} for user {}", bookingId, userId);
 
@@ -55,8 +54,8 @@ public class BookingController {
     // отменить свою бронь
     @DeleteMapping("/{bookingId}/cancel")
     public ResponseEntity<Void> cancelMyBooking(
-            @RequestParam @NotNull @Positive UUID userId,
-            @PathVariable @NotNull @Positive UUID bookingId) {
+            @RequestParam @NotNull UUID userId,
+            @PathVariable @NotNull UUID bookingId) {
 
         log.info("REST request to cancel booking {} for user {}", bookingId, userId);
 
