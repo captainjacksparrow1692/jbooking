@@ -69,9 +69,7 @@ class PaymentServiceImplTest {
         Booking booking = bookingWithUser(BookingStatus.HOLD);
 
         PaymentRequest request = new PaymentRequest(
-                booking.getId(), BigDecimal.valueOf(500), PaymentType.PREPAYMENT,
-                PaymentStatus.PENDING, null
-        );
+                booking.getId(), BigDecimal.valueOf(500), PaymentType.PREPAYMENT, null);
 
         PaymentResponse bankResponse = new PaymentResponse(
                 "TXN-BANK-001", PaymentStatus.SUCCESS, BigDecimal.valueOf(500), "Hold placed"
@@ -100,9 +98,7 @@ class PaymentServiceImplTest {
     void processPayment_shouldThrowWhenBookingNotFound() {
         UUID randomId = UUID.randomUUID();
         PaymentRequest request = new PaymentRequest(
-                randomId, BigDecimal.valueOf(500), PaymentType.PREPAYMENT,
-                PaymentStatus.PENDING, null
-        );
+                randomId, BigDecimal.valueOf(500), PaymentType.PREPAYMENT, null);
 
         when(bookingRepository.findById(randomId)).thenReturn(Optional.empty());
 
