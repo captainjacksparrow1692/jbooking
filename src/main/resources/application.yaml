@@ -25,8 +25,7 @@ spring:
     show-sql: ${SHOW_SQL:true}
     properties:
       hibernate:
-        jdbc:
-          batch_size: 20
+        jdbc:batch_size: 20я
         order_updates: true
         order_inserts: true
         format_sql: true
