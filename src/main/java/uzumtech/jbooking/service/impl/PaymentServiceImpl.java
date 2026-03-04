@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uzumtech.jbooking.component.adapter.JBankAdapter;
 import uzumtech.jbooking.component.adapter.JNotificationAdapter;
+import uzumtech.jbooking.constant.Constant;
 import uzumtech.jbooking.constant.enums.*;
 import uzumtech.jbooking.constant.enums.Error;
 import uzumtech.jbooking.dto.request.BankWebhookRequest;
@@ -73,7 +74,7 @@ public class PaymentServiceImpl implements PaymentService {
                 payment.getTransactionId(),
                 payment.getPaymentStatus(),
                 payment.getAmount(),
-                "Payment initiated, awaiting bank confirmation"
+                Constant.PAYMENT_SUCCESS_MESSAGE
         );
     }
 
