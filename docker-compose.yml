@@ -5,7 +5,7 @@ services:
     image: postgres:16-alpine
     container_name: postgres
     ports:
-      - "5435:5432"
+      - "5432:5432"
     environment:
       POSTGRES_DB: jbooking
       POSTGRES_USER: sparrow
