@@ -1,7 +1,6 @@
 package uzumtech.jbooking.mapper;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import uzumtech.jbooking.dto.response.CityResponse;
 import uzumtech.jbooking.entity.City;
 
@@ -9,6 +8,5 @@ import uzumtech.jbooking.entity.City;
 public interface CityMapper {
 
     // Из Entity в Response
-    @Mapping(target = "name", ignore = true)
     CityResponse toResponse(City city);
 }
