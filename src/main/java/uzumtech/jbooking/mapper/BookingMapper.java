@@ -9,6 +9,7 @@ import uzumtech.jbooking.entity.Booking;
 @Mapper(componentModel = "spring")
 public interface BookingMapper {
 
+    //Entity в Response
     @Mapping(target = "bookingId", source = "id")
     @Mapping(target = "userId", source = "user.id")
     @Mapping(target = "hotelName", source = "room.hotel.name")
@@ -18,10 +19,11 @@ public interface BookingMapper {
     @Mapping(target = "roomNumber", source = "room.roomNumber")
     @Mapping(target = "checkIn", source = "checkInDate")
     @Mapping(target = "checkOut", source = "checkOutDate")
-    @Mapping(target = "totalPrice", ignore = true) // Оставляем null по твоему запросу
+    @Mapping(target = "totalPrice", ignore = true)
     @Mapping(target = "paymentType", ignore = true)
     BookingResponse toBookingResponse(Booking booking);
 
+    //Request в Entity
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user.id", source = "userId")
     @Mapping(target = "room", ignore = true)
